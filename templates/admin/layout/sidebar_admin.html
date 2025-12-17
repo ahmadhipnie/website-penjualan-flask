@@ -15,14 +15,14 @@
     </li>
     <hr class="sidebar-divider">
     <div class="sidebar-heading">Manajemen</div>
-    <li class="nav-item">
-        <a class="nav-link" href="#">
+    <li class="nav-item {{ 'active' if request.endpoint in ['produk.index', 'produk.tambah', 'produk.edit'] }}">
+        <a class="nav-link" href="{{ url_for('produk.index') }}">
             <i class="fas fa-fw fa-box"></i>
             <span>Produk</span>
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">
+    <li class="nav-item {{ 'active' if request.endpoint == 'kategori.index' }}">
+        <a class="nav-link" href="{{ url_for('kategori.index') }}">
             <i class="fas fa-fw fa-tags"></i>
             <span>Kategori</span>
         </a>

@@ -5,7 +5,7 @@
 {% block page_heading %}
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Manajemen Produk</h1>
-    <a href="#" class="btn btn-primary btn-icon-split">
+    <a href="{{ url_for('produk.tambah') }}" class="btn btn-primary btn-icon-split">
         <span class="icon text-white-50">
             <i class="fas fa-plus"></i>
         </span>
@@ -15,9 +15,9 @@
 {% endblock %}
 
 {% block content %}
-<!-- DataTales Example -->
+<!-- DataTables Card -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Daftar Produk</h6>
     </div>
     <div class="card-body">
@@ -25,109 +25,70 @@
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Gambar</th>
-                        <th>Nama Produk</th>
-                        <th>Kategori</th>
-                        <th>Harga</th>
-                        <th>Stok</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
+                        <th width="5%">ID</th>
+                        <th width="10%">Gambar</th>
+                        <th width="25%">Nama Produk</th>
+                        <th width="15%">Kategori</th>
+                        <th width="12%">Harga</th>
+                        <th width="8%">Stok</th>
+                        <th width="25%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Contoh Data Statis (nanti diganti dengan data dari database) -->
-                    <tr>
-                        <td>1</td>
+                    {% for produk in produks %}
+                    <tr id="row-{{ produk.id }}">
+                        <td>{{ produk.id }}</td>
                         <td>
+                            {% if produk.gambar_utama %}
+                            <img src="{{ url_for('static', filename='gambar_produk/' + produk.gambar_utama) }}" 
+                                 alt="{{ produk.nama_barang }}" 
+                                 class="img-thumbnail" 
+                                 style="width: 60px; height: 60px; object-fit: cover;">
+                            {% else %}
                             <img src="{{ url_for('static', filename='assets_sb_admin/img/undraw_profile.svg') }}" 
-                                 alt="Product" class="img-thumbnail" style="width: 50px;">
+                                 alt="No Image" 
+                                 class="img-thumbnail" 
+                                 style="width: 60px; height: 60px; object-fit: cover;">
+                            {% endif %}
                         </td>
-                        <td>Sofa Minimalis Modern</td>
-                        <td><span class="badge badge-info">Furniture</span></td>
-                        <td>Rp 3.500.000</td>
-                        <td>15</td>
-                        <td><span class="badge badge-success">Aktif</span></td>
                         <td>
-                            <a href="#" class="btn btn-sm btn-info" title="Detail">
-                                <i class="fas fa-eye"></i>
+                            <strong>{{ produk.nama_barang }}</strong><br>
+                            <small class="text-muted">{{ produk.deskripsi[:50] }}...</small>
+                        </td>
+                        <td>
+                            {% if produk.nama_kategori %}
+                            <span class="badge badge-info">{{ produk.nama_kategori }}</span>
+                            {% else %}
+                            <span class="badge badge-secondary">Tanpa Kategori</span>
+                            {% endif %}
+                        </td>
+                        <td>Rp {{ "{:,.0f}".format(produk.harga) }}</td>
+                        <td>
+                            {% if produk.stok > 10 %}
+                            <span class="badge badge-success">{{ produk.stok }}</span>
+                            {% elif produk.stok > 0 %}
+                            <span class="badge badge-warning">{{ produk.stok }}</span>
+                            {% else %}
+                            <span class="badge badge-danger">Habis</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('produk.edit', id=produk.id) }}" 
+                               class="btn btn-sm btn-warning" 
+                               title="Edit">
+                                <i class="fas fa-edit"></i> Edit
                             </a>
-                            <a href="#" class="btn btn-sm btn-warning" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="#" class="btn btn-sm btn-danger" title="Hapus">
-                                <i class="fas fa-trash"></i>
-                            </a>
+                            <button class="btn btn-sm btn-danger btn-delete" 
+                                    data-id="{{ produk.id }}"
+                                    data-nama="{{ produk.nama_barang }}"
+                                    title="Hapus">
+                                <i class="fas fa-trash"></i> Hapus
+                            </button>
                         </td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>
-                            <img src="{{ url_for('static', filename='assets_sb_admin/img/undraw_profile.svg') }}" 
-                                 alt="Product" class="img-thumbnail" style="width: 50px;">
-                        </td>
-                        <td>Meja Makan Kayu Jati</td>
-                        <td><span class="badge badge-info">Furniture</span></td>
-                        <td>Rp 5.000.000</td>
-                        <td>8</td>
-                        <td><span class="badge badge-success">Aktif</span></td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-info" title="Detail">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" class="btn btn-sm btn-warning" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="#" class="btn btn-sm btn-danger" title="Hapus">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-<!-- Info Cards -->
-<div class="row">
-    <div class="col-lg-6">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Informasi</h6>
-            </div>
-            <div class="card-body">
-                <p>Halaman ini adalah contoh penggunaan template layout system.</p>
-                <p>Dengan template system, Anda hanya perlu:</p>
-                <ul>
-                    <li>Extends dari base template</li>
-                    <li>Override block yang diperlukan</li>
-                    <li>Fokus pada konten halaman</li>
-                </ul>
-                <p class="mb-0">Sidebar, topbar, dan footer sudah otomatis ter-include.</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-lg-6">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-success">Quick Stats</h6>
-            </div>
-            <div class="card-body">
-                <h4 class="small font-weight-bold">Produk Aktif <span class="float-right">80%</span></h4>
-                <div class="progress mb-4">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 80%"></div>
-                </div>
-                <h4 class="small font-weight-bold">Stok Rendah <span class="float-right">20%</span></h4>
-                <div class="progress mb-4">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 20%"></div>
-                </div>
-                <h4 class="small font-weight-bold">Produk Habis <span class="float-right">5%</span></h4>
-                <div class="progress">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 5%"></div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -135,18 +96,72 @@
 
 {% block extra_css %}
 <link href="{{ url_for('static', filename='assets_sb_admin/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+<style>
+    .btn-sm {
+        margin: 2px 0;
+    }
+</style>
 {% endblock %}
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='assets_sb_admin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ url_for('static', filename='assets_sb_admin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    $(document).ready(function() {
-        $('#dataTable').DataTable({
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
+$(document).ready(function() {
+    // Initialize DataTable
+    $('#dataTable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
+        },
+        "order": [[0, "desc"]]
+    });
+
+    // Button Delete
+    $('.btn-delete').click(function() {
+        var id = $(this).data('id');
+        var nama = $(this).data('nama');
+        
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Produk '" + nama + "' dan semua gambarnya akan dihapus!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{ url_for('produk.delete', id=0) }}".replace('0', id),
+                    type: 'POST',
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Terhapus!',
+                            text: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(function() {
+                            location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        var message = xhr.responseJSON && xhr.responseJSON.message 
+                            ? xhr.responseJSON.message 
+                            : 'Terjadi kesalahan saat menghapus produk';
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: message
+                        });
+                    }
+                });
             }
         });
     });
+});
 </script>
 {% endblock %}

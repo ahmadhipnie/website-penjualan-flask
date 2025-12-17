@@ -1,0 +1,297 @@
+{% extends 'admin/layout/base_admin.html' %}
+
+{% block title %}Manajemen Kategori - Admin E-Commerce{% endblock %}
+
+{% block page_heading %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Manajemen Kategori</h1>
+    <button class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#modalTambah">
+        <span class="icon text-white-50">
+            <i class="fas fa-plus"></i>
+        </span>
+        <span class="text">Tambah Kategori</span>
+    </button>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- DataTables Card -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Daftar Kategori</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="10%">ID</th>
+                        <th width="60%">Nama Kategori</th>
+                        <th width="30%">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for kategori in kategoris %}
+                    <tr id="row-{{ kategori.id }}">
+                        <td>{{ kategori.id }}</td>
+                        <td>{{ kategori.nama_kategori }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning btn-edit" 
+                                    data-id="{{ kategori.id }}"
+                                    data-nama="{{ kategori.nama_kategori }}"
+                                    title="Edit">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger btn-delete" 
+                                    data-id="{{ kategori.id }}"
+                                    data-nama="{{ kategori.nama_kategori }}"
+                                    title="Hapus">
+                                <i class="fas fa-trash"></i> Hapus
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tambah Kategori -->
+<div class="modal fade" id="modalTambah" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Kategori Baru</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form id="formTambah">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nama_kategori_tambah">Nama Kategori <span class="text-danger">*</span></label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="nama_kategori_tambah" 
+                               name="nama_kategori" 
+                               placeholder="Masukkan nama kategori"
+                               required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Kategori -->
+<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Kategori</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form id="formEdit">
+                <input type="hidden" id="edit_kategori_id" name="kategori_id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nama_kategori_edit">Nama Kategori <span class="text-danger">*</span></label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="nama_kategori_edit" 
+                               name="nama_kategori" 
+                               placeholder="Masukkan nama kategori"
+                               required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save"></i> Update
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<link href="{{ url_for('static', filename='assets_sb_admin/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+<style>
+    .btn-sm {
+        margin: 2px;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='assets_sb_admin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets_sb_admin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+$(document).ready(function() {
+    // Initialize DataTable
+    $('#dataTable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
+        },
+        "order": [[0, "desc"]]
+    });
+
+    // Form Tambah Kategori
+    $('#formTambah').submit(function(e) {
+        e.preventDefault();
+        
+        var formData = $(this).serialize();
+        var submitBtn = $(this).find('button[type="submit"]');
+        submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
+        
+        $.ajax({
+            url: "{{ url_for('kategori.store') }}",
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                $('#modalTambah').modal('hide');
+                $('#formTambah')[0].reset();
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: response.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(function() {
+                    location.reload();
+                });
+            },
+            error: function(xhr) {
+                var message = xhr.responseJSON && xhr.responseJSON.message 
+                    ? xhr.responseJSON.message 
+                    : 'Terjadi kesalahan saat menambahkan kategori';
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: message
+                });
+            },
+            complete: function() {
+                submitBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Simpan');
+            }
+        });
+    });
+
+    // Button Edit - Load Data
+    $('.btn-edit').click(function() {
+        var id = $(this).data('id');
+        var nama = $(this).data('nama');
+        
+        $('#edit_kategori_id').val(id);
+        $('#nama_kategori_edit').val(nama);
+        $('#modalEdit').modal('show');
+    });
+
+    // Form Edit Kategori
+    $('#formEdit').submit(function(e) {
+        e.preventDefault();
+        
+        var id = $('#edit_kategori_id').val();
+        var formData = $(this).serialize();
+        var submitBtn = $(this).find('button[type="submit"]');
+        submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Mengupdate...');
+        
+        $.ajax({
+            url: "{{ url_for('kategori.update', id=0) }}".replace('0', id),
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                $('#modalEdit').modal('hide');
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: response.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(function() {
+                    location.reload();
+                });
+            },
+            error: function(xhr) {
+                var message = xhr.responseJSON && xhr.responseJSON.message 
+                    ? xhr.responseJSON.message 
+                    : 'Terjadi kesalahan saat mengupdate kategori';
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: message
+                });
+            },
+            complete: function() {
+                submitBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Update');
+            }
+        });
+    });
+
+    // Button Delete
+    $('.btn-delete').click(function() {
+        var id = $(this).data('id');
+        var nama = $(this).data('nama');
+        
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Kategori '" + nama + "' akan dihapus!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{ url_for('kategori.delete', id=0) }}".replace('0', id),
+                    type: 'POST',
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Terhapus!',
+                            text: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(function() {
+                            $('#row-' + id).fadeOut(300, function() {
+                                $(this).remove();
+                            });
+                        });
+                    },
+                    error: function(xhr) {
+                        var message = xhr.responseJSON && xhr.responseJSON.message 
+                            ? xhr.responseJSON.message 
+                            : 'Terjadi kesalahan saat menghapus kategori';
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: message
+                        });
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
