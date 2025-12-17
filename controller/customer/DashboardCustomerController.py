@@ -33,7 +33,40 @@ def inject_cart_count():
 @customer_required
 def dashboard():
     """Dashboard Customer"""
-    return render_template('customer/dashboard/index.html', user=session)
+    db = get_db()
+    cursor = db.cursor()
+    
+    # Hitung total pesanan
+    cursor.execute("SELECT COUNT(*) as total FROM penjualans WHERE id_user = %s", (session['user_id'],))
+    result = cursor.fetchone()
+    total_pesanan = result['total'] if result else 0
+    
+    # Hitung pesanan selesai
+    cursor.execute("SELECT COUNT(*) as total FROM penjualans WHERE id_user = %s AND status = 'selesai'", (session['user_id'],))
+    result = cursor.fetchone()
+    pesanan_selesai = result['total'] if result else 0
+    
+    # Hitung pesanan diproses (menunggu pembayaran + sedang diproses + dikirim)
+    cursor.execute("""
+        SELECT COUNT(*) as total FROM penjualans 
+        WHERE id_user = %s AND status IN ('menunggu_pembayaran', 'sedang_diproses', 'dikirim')
+    """, (session['user_id'],))
+    result = cursor.fetchone()
+    pesanan_diproses = result['total'] if result else 0
+    
+    # Hitung item di keranjang
+    cursor.execute("SELECT COUNT(*) as total FROM keranjangs WHERE id_user = %s", (session['user_id'],))
+    result = cursor.fetchone()
+    keranjang_count = result['total'] if result else 0
+    
+    cursor.close()
+    
+    return render_template('customer/dashboard/index.html', 
+                         user=session,
+                         total_pesanan=total_pesanan,
+                         pesanan_selesai=pesanan_selesai,
+                         pesanan_diproses=pesanan_diproses,
+                         keranjang_count=keranjang_count)
 
 @customer_bp.route('/produk')
 @customer_required
@@ -59,34 +92,28 @@ def produk():
 @customer_bp.route('/keranjang')
 @customer_required
 def keranjang():
-    """Halaman Katalog Produk (dulu keranjang)"""
+    """Halaman Keranjang Belanja"""
     db = get_db()
     cursor = db.cursor()
     
-    # Ambil semua produk yang tersedia dengan kategori dan gambar
+    # Ambil item keranjang user dengan detail produk
     cursor.execute("""
-        SELECT b.id, b.nama_barang, b.deskripsi, b.harga, b.stok, 
-               b.created_at, b.updated_at, b.id_kategori,
-               k.nama_kategori,
+        SELECT k.id, k.id_user, k.id_barang, k.jumlah, k.created_at, k.updated_at,
+               b.nama_barang, b.harga, b.stok,
                (SELECT gambar_url FROM gambar_barangs 
                 WHERE id_barang = b.id AND is_primary = 1 LIMIT 1) as gambar_utama
-        FROM barangs b 
-        LEFT JOIN kategoris k ON b.id_kategori = k.id
-        WHERE b.stok > 0
-        ORDER BY b.created_at DESC
-    """)
-    produk_list = cursor.fetchall()
-    
-    # Ambil semua kategori untuk filter
-    cursor.execute("SELECT id, nama_kategori FROM kategoris ORDER BY nama_kategori")
-    kategori_list = cursor.fetchall()
-    
+        FROM keranjangs k
+        JOIN barangs b ON k.id_barang = b.id
+        WHERE k.id_user = %s
+        ORDER BY k.created_at DESC
+    """, (session['user_id'],))
+    keranjang_items = cursor.fetchall()
     cursor.close()
     
-    return render_template('customer/keranjang/index.html', 
-                         user=session, 
-                         produk_list=produk_list,
-                         kategori_list=kategori_list)
+    return render_template('customer/cart/index.html', user=session, keranjang_items=keranjang_items)
+
+# Route katalog dihapus karena tidak digunakan lagi
+# Menu customer hanya: Dashboard, Keranjang, Pesanan, Profil
 
 @customer_bp.route('/pesanan')
 @customer_required
@@ -107,6 +134,17 @@ def pesanan():
         ORDER BY p.created_at DESC
     """, (session['user_id'],))
     pesanan_list = cursor.fetchall()
+
+    # Fetch detail items for each pesanan
+    for pesanan in pesanan_list:
+        cursor.execute("""
+            SELECT dp.qty, dp.harga, dp.subtotal, b.nama_barang,
+                   (SELECT gambar_url FROM gambar_barangs gb WHERE gb.id_barang = b.id AND gb.is_primary = 1 LIMIT 1) as gambar_utama
+            FROM detail_penjualans dp
+            JOIN barangs b ON dp.id_produk = b.id
+            WHERE dp.id_penjualan = %s
+        """, (pesanan['id'],))
+        pesanan['items'] = cursor.fetchall()
     cursor.close()
     
     return render_template('customer/pesanan/index.html', user=session, pesanan_list=pesanan_list)
@@ -153,28 +191,8 @@ def alamat():
     
     return render_template('customer/alamat_user/index.html', user=session, alamat_list=alamat_list)
 
-@customer_bp.route('/cart')
-@customer_required
-def cart():
-    """Halaman Keranjang Belanja"""
-    db = get_db()
-    cursor = db.cursor()
-    
-    # Ambil item keranjang user dengan detail produk
-    cursor.execute("""
-        SELECT k.id, k.id_user, k.id_barang, k.jumlah, k.created_at, k.updated_at,
-               b.nama_barang, b.harga, b.stok,
-               (SELECT gambar_url FROM gambar_barangs 
-                WHERE id_barang = b.id AND is_primary = 1 LIMIT 1) as gambar_utama
-        FROM keranjangs k
-        JOIN barangs b ON k.id_barang = b.id
-        WHERE k.id_user = %s
-        ORDER BY k.created_at DESC
-    """, (session['user_id'],))
-    keranjang_items = cursor.fetchall()
-    cursor.close()
-    
-    return render_template('customer/cart/index.html', user=session, keranjang_items=keranjang_items)
+# Route cart dihapus karena sudah digabung dengan keranjang
+# Sekarang /keranjang dan /cart mengarah ke halaman yang sama
 
 @customer_bp.route('/cart/update/<int:item_id>', methods=['POST'])
 @customer_required
