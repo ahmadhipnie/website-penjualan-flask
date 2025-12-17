@@ -244,3 +244,117 @@ def cart_remove(item_id):
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
 
+@customer_bp.route('/profil/update', methods=['POST'])
+@customer_required
+def update_profil():
+    """Update profil customer"""
+    try:
+        nama = request.form.get('nama')
+        email = request.form.get('email')
+        nomor_telepon = request.form.get('nomor_telepon')
+        tanggal_lahir = request.form.get('tanggal_lahir')
+        jenis_kelamin = request.form.get('jenis_kelamin')
+        
+        db = get_db()
+        cursor = db.cursor()
+        
+        # Update data user
+        cursor.execute("""
+            UPDATE users 
+            SET nama = %s, email = %s, nomor_telepon = %s, 
+                tanggal_lahir = %s, jenis_kelamin = %s, updated_at = NOW()
+            WHERE id = %s
+        """, (nama, email, nomor_telepon, tanggal_lahir, jenis_kelamin, session['user_id']))
+        
+        db.commit()
+        cursor.close()
+        
+        # Update session
+        session['nama'] = nama
+        session['email'] = email
+        
+        return jsonify({'success': True, 'message': 'Profil berhasil diupdate'})
+    
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+@customer_bp.route('/alamat/tambah', methods=['POST'])
+@customer_required
+def tambah_alamat():
+    """Tambah alamat baru"""
+    try:
+        alamat = request.form.get('alamat')
+        provinsi = request.form.get('provinsi')
+        kabupaten = request.form.get('kabupaten')
+        kecamatan = request.form.get('kecamatan')
+        kode_pos = request.form.get('kode_pos')
+        
+        db = get_db()
+        cursor = db.cursor()
+        
+        # Insert alamat baru
+        cursor.execute("""
+            INSERT INTO alamat_users (alamat, provinsi, kabupaten, kecamatan, kode_pos, id_user, created_at, updated_at)
+            VALUES (%s, %s, %s, %s, %s, %s, NOW(), NOW())
+        """, (alamat, provinsi, kabupaten, kecamatan, kode_pos, session['user_id']))
+        
+        db.commit()
+        cursor.close()
+        
+        return jsonify({'success': True, 'message': 'Alamat berhasil ditambahkan'})
+    
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+@customer_bp.route('/alamat/update/<int:alamat_id>', methods=['POST'])
+@customer_required
+def update_alamat(alamat_id):
+    """Update alamat"""
+    try:
+        alamat = request.form.get('alamat')
+        provinsi = request.form.get('provinsi')
+        kabupaten = request.form.get('kabupaten')
+        kecamatan = request.form.get('kecamatan')
+        kode_pos = request.form.get('kode_pos')
+        
+        db = get_db()
+        cursor = db.cursor()
+        
+        # Update alamat
+        cursor.execute("""
+            UPDATE alamat_users 
+            SET alamat = %s, provinsi = %s, kabupaten = %s, 
+                kecamatan = %s, kode_pos = %s, updated_at = NOW()
+            WHERE id = %s AND id_user = %s
+        """, (alamat, provinsi, kabupaten, kecamatan, kode_pos, alamat_id, session['user_id']))
+        
+        db.commit()
+        cursor.close()
+        
+        return jsonify({'success': True, 'message': 'Alamat berhasil diupdate'})
+    
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+@customer_bp.route('/alamat/delete/<int:alamat_id>', methods=['POST'])
+@customer_required
+def delete_alamat(alamat_id):
+    """Hapus alamat"""
+    try:
+        db = get_db()
+        cursor = db.cursor()
+        
+        # Hapus alamat
+        cursor.execute("""
+            DELETE FROM alamat_users 
+            WHERE id = %s AND id_user = %s
+        """, (alamat_id, session['user_id']))
+        
+        db.commit()
+        cursor.close()
+        
+        return jsonify({'success': True, 'message': 'Alamat berhasil dihapus'})
+    
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
