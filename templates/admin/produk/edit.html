@@ -1,0 +1,322 @@
+{% extends 'admin/layout/base_admin.html' %}
+
+{% block title %}Edit Produk - Admin E-Commerce{% endblock %}
+
+{% block page_heading %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Edit Produk</h1>
+    <a href="{{ url_for('produk.index') }}" class="btn btn-secondary btn-icon-split">
+        <span class="icon text-white-50">
+            <i class="fas fa-arrow-left"></i>
+        </span>
+        <span class="text">Kembali</span>
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Informasi Produk</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" id="formProduk">
+                    <div class="form-group">
+                        <label for="nama_barang">Nama Produk <span class="text-danger">*</span></label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="nama_barang" 
+                               name="nama_barang" 
+                               value="{{ produk.nama_barang }}"
+                               placeholder="Masukkan nama produk"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_kategori">Kategori <span class="text-danger">*</span></label>
+                        <select class="form-control" id="id_kategori" name="id_kategori" required>
+                            <option value="">-- Pilih Kategori --</option>
+                            {% for kategori in kategoris %}
+                            <option value="{{ kategori.id }}" {% if produk.id_kategori == kategori.id %}selected{% endif %}>
+                                {{ kategori.nama_kategori }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="deskripsi">Deskripsi <span class="text-danger">*</span></label>
+                        <textarea class="form-control" 
+                                  id="deskripsi" 
+                                  name="deskripsi" 
+                                  rows="4"
+                                  placeholder="Deskripsi produk..."
+                                  required>{{ produk.deskripsi }}</textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="harga">Harga (Rp) <span class="text-danger">*</span></label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="harga" 
+                                       name="harga" 
+                                       value="{{ produk.harga }}"
+                                       placeholder="0"
+                                       min="0"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="stok">Stok <span class="text-danger">*</span></label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="stok" 
+                                       name="stok" 
+                                       value="{{ produk.stok }}"
+                                       placeholder="0"
+                                       min="0"
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h6 class="font-weight-bold text-primary">Gambar Produk Saat Ini</h6>
+                    
+                    {% if images %}
+                    <div class="row mb-3">
+                        {% for image in images %}
+                        <div class="col-md-3 col-sm-4 col-6 mb-3" id="image-{{ image.id }}">
+                            <div class="card">
+                                <img src="{{ url_for('static', filename='gambar_produk/' + image.gambar_url) }}" 
+                                     class="card-img-top" 
+                                     style="height: 150px; object-fit: cover;">
+                                <div class="card-body p-2 text-center">
+                                    {% if image.is_primary %}
+                                    <span class="badge badge-primary">Utama</span>
+                                    {% else %}
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-primary btn-set-primary"
+                                            data-id="{{ image.id }}"
+                                            data-produk="{{ produk.id }}">
+                                        Set Utama
+                                    </button>
+                                    {% endif %}
+                                    <button type="button" 
+                                            class="btn btn-sm btn-danger btn-delete-image"
+                                            data-id="{{ image.id }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">Belum ada gambar untuk produk ini.</div>
+                    {% endif %}
+
+                    <hr>
+
+                    <div class="form-group">
+                        <label for="gambar">Tambah Gambar Baru</label>
+                        <div class="custom-file">
+                            <input type="file" 
+                                   class="custom-file-input" 
+                                   id="gambar" 
+                                   name="gambar[]"
+                                   multiple
+                                   accept="image/*"
+                                   onchange="previewImages(event)">
+                            <label class="custom-file-label" for="gambar">Pilih gambar (bisa lebih dari 1)</label>
+                        </div>
+                        <small class="form-text text-muted">
+                            Format: JPG, JPEG, PNG, GIF, WEBP. Biarkan kosong jika tidak ingin menambah gambar.
+                        </small>
+                    </div>
+
+                    <div id="imagePreview" class="row mt-3"></div>
+
+                    <hr>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save"></i> Update Produk
+                        </button>
+                        <a href="{{ url_for('produk.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-info">
+                    <i class="fas fa-info-circle"></i> Informasi
+                </h6>
+            </div>
+            <div class="card-body">
+                <p><strong>Tips Edit Produk:</strong></p>
+                <ul>
+                    <li>Pastikan data yang diubah sudah benar</li>
+                    <li>Klik "Set Utama" untuk mengganti gambar utama</li>
+                    <li>Hapus gambar yang tidak diperlukan</li>
+                    <li>Upload gambar baru jika diperlukan</li>
+                    <li>Minimal harus ada 1 gambar</li>
+                </ul>
+                
+                <hr>
+                
+                <p><strong>ID Produk:</strong> {{ produk.id }}</p>
+                <p><strong>Dibuat:</strong> {{ produk.created_at.strftime('%d %b %Y') if produk.created_at else '-' }}</p>
+                <p><strong>Update Terakhir:</strong> {{ produk.updated_at.strftime('%d %b %Y') if produk.updated_at else '-' }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .image-preview {
+        position: relative;
+        margin-bottom: 10px;
+    }
+    .image-preview img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+    .image-preview .badge {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function previewImages(event) {
+    const files = event.target.files;
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = '';
+    
+    if (files.length > 0) {
+        // Update label
+        const label = document.querySelector('.custom-file-label');
+        if (files.length === 1) {
+            label.textContent = files[0].name;
+        } else {
+            label.textContent = files.length + ' gambar dipilih';
+        }
+        
+        // Show preview
+        Array.from(files).forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const col = document.createElement('div');
+                col.className = 'col-md-3 col-sm-4 col-6';
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'image-preview';
+                
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'img-thumbnail';
+                
+                wrapper.appendChild(img);
+                col.appendChild(wrapper);
+                preview.appendChild(col);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+}
+
+// Delete image
+$(document).on('click', '.btn-delete-image', function() {
+    const imageId = $(this).data('id');
+    
+    Swal.fire({
+        title: 'Hapus Gambar?',
+        text: "Gambar akan dihapus permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "{{ url_for('produk.delete_image', id=0) }}".replace('0', imageId),
+                type: 'POST',
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Terhapus!',
+                        text: response.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    $('#image-' + imageId).fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: xhr.responseJSON?.message || 'Gagal menghapus gambar'
+                    });
+                }
+            });
+        }
+    });
+});
+
+// Set primary image
+$(document).on('click', '.btn-set-primary', function() {
+    const imageId = $(this).data('id');
+    const produkId = $(this).data('produk');
+    
+    $.ajax({
+        url: "{{ url_for('produk.set_primary', produk_id=0, image_id=0) }}"
+            .replace(/\/0\//, '/' + produkId + '/')
+            .replace(/\/0$/, '/' + imageId),
+        type: 'POST',
+        success: function(response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: response.message,
+                showConfirmButton: false,
+                timer: 1500
+            }).then(function() {
+                location.reload();
+            });
+        },
+        error: function(xhr) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: xhr.responseJSON?.message || 'Gagal set gambar utama'
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

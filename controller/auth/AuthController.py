@@ -35,7 +35,7 @@ def login():
             if user['role'] == 'admin':
                 return redirect(url_for('admin_dashboard'))
             else:
-                return redirect(url_for('customer_dashboard'))
+                return redirect(url_for('customer.dashboard'))
         else:
             flash('Email atau password salah!', 'danger')
             return render_template('auth/login.html')
