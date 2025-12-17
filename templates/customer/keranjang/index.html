@@ -1,91 +1,158 @@
 {% extends 'customer/layout/base_customer.html' %}
 
-{% block title %}Keranjang Belanja - E-Commerce{% endblock %}
+{% block title %}Katalog Produk - E-Commerce{% endblock %}
 
 {% block page_heading %}
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Keranjang Belanja</h1>
+    <h1 class="h3 mb-0 text-gray-800">Katalog Produk</h1>
 </div>
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-8">
-        <!-- Keranjang Items -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Item di Keranjang</h6>
+<!-- Filter & Search -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <select class="custom-select" id="kategoriFilter">
+                    <option value="">Semua Kategori</option>
+                    {% if kategori_list %}
+                        {% for kategori in kategori_list %}
+                        <option value="{{ kategori[0] }}">{{ kategori[1] }}</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
             </div>
-            <div class="card-body">
-                {% if keranjang_list %}
-                    {% for item in keranjang_list %}
-                    <div class="row mb-3 pb-3 border-bottom">
-                        <div class="col-md-2">
-                            <img src="{{ url_for('static', filename='assets_landing/img/product-1.jpg') }}" class="img-fluid" alt="{{ item[3] }}">
-                        </div>
-                        <div class="col-md-4">
-                            <h6>{{ item[3] }}</h6>
-                            <p class="text-muted">Stok: {{ item[5] }}</p>
-                        </div>
-                        <div class="col-md-2">
-                            <p class="font-weight-bold">Rp {{ "{:,.0f}".format(item[4]) }}</p>
-                        </div>
-                        <div class="col-md-2">
-                            <input type="number" class="form-control" value="{{ item[2] }}" min="1" max="{{ item[5] }}">
-                        </div>
-                        <div class="col-md-2 text-right">
-                            <p class="font-weight-bold text-primary">Rp {{ "{:,.0f}".format(item[4] * item[2]) }}</p>
-                            <button class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
+            <div class="col-md-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="searchProduk" placeholder="Cari produk...">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search"></i> Cari
+                        </button>
                     </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="text-center py-5">
-                        <i class="fas fa-shopping-cart fa-3x text-gray-300 mb-3"></i>
-                        <p class="text-gray-600">Keranjang Anda kosong</p>
-                        <a href="{{ url_for('customer.produk') }}" class="btn btn-primary">
-                            <i class="fas fa-shopping-bag"></i> Belanja Sekarang
-                        </a>
-                    </div>
-                {% endif %}
+                </div>
             </div>
-        </div>
-    </div>
-
-    <div class="col-lg-4">
-        <!-- Ringkasan Belanja -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Ringkasan Belanja</h6>
-            </div>
-            <div class="card-body">
-                {% if keranjang_list %}
-                    {% set total = namespace(value=0) %}
-                    {% for item in keranjang_list %}
-                        {% set total.value = total.value + (item[4] * item[2]) %}
-                    {% endfor %}
-                    
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Subtotal</span>
-                        <span>Rp {{ "{:,.0f}".format(total.value) }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Ongkir</span>
-                        <span class="text-muted">Dihitung di checkout</span>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between mb-3">
-                        <strong>Total</strong>
-                        <strong class="text-primary">Rp {{ "{:,.0f}".format(total.value) }}</strong>
-                    </div>
-                    <button class="btn btn-primary btn-block">
-                        <i class="fas fa-shopping-cart"></i> Checkout
-                    </button>
-                {% endif %}
+            <div class="col-md-3">
+                <select class="custom-select" id="sortProduk">
+                    <option value="terbaru">Urutkan: Terbaru</option>
+                    <option value="harga_terendah">Harga Terendah</option>
+                    <option value="harga_tertinggi">Harga Tertinggi</option>
+                    <option value="nama_az">Nama A-Z</option>
+                    <option value="nama_za">Nama Z-A</option>
+                </select>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Product Grid -->
+<div class="row" id="productGrid">
+    {% if produk_list %}
+        {% for produk in produk_list %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-item" data-kategori="{{ produk[7] }}" data-nama="{{ produk[1]|lower }}" data-harga="{{ produk[3] }}">
+            <div class="card h-100 shadow-sm">
+                {% if produk[9] %}
+                <img src="{{ url_for('static', filename='gambar_produk/' + produk[9]) }}" class="card-img-top" alt="{{ produk[1] }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <img src="{{ url_for('static', filename='assets_landing/img/product-1.jpg') }}" class="card-img-top" alt="{{ produk[1] }}" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-2">
+                        {% if produk[8] %}
+                        <span class="badge badge-info badge-sm">{{ produk[8] }}</span>
+                        {% endif %}
+                    </div>
+                    <h6 class="card-title">{{ produk[1] }}</h6>
+                    <p class="card-text text-muted small" style="height: 40px; overflow: hidden;">
+                        {{ produk[2][:80] }}{% if produk[2]|length > 80 %}...{% endif %}
+                    </p>
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="text-primary mb-0">Rp {{ "{:,.0f}".format(produk[3]) }}</h5>
+                            <small class="text-muted">Stok: {{ produk[4] }}</small>
+                        </div>
+                        <button class="btn btn-primary btn-block btn-sm" onclick="tambahKeKeranjang({{ produk[0] }})">
+                            <i class="fas fa-cart-plus"></i> Tambah
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-box-open fa-3x text-gray-300 mb-3"></i>
+                    <p class="text-gray-600">Belum ada produk dalam katalog</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
 {% endblock %}
+
+{% block extra_js %}
+<script>
+// Filter berdasarkan kategori
+$('#kategoriFilter').on('change', function() {
+    var kategoriId = $(this).val();
+    
+    if (kategoriId === '') {
+        $('.product-item').show();
+    } else {
+        $('.product-item').hide();
+        $('.product-item[data-kategori="' + kategoriId + '"]').show();
+    }
+});
+
+// Search produk
+$('#searchProduk').on('keyup', function() {
+    var searchTerm = $(this).val().toLowerCase();
+    
+    $('.product-item').each(function() {
+        var namaProduk = $(this).data('nama');
+        if (namaProduk.includes(searchTerm)) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+});
+
+// Sort produk
+$('#sortProduk').on('change', function() {
+    var sortType = $(this).val();
+    var productGrid = $('#productGrid');
+    var products = $('.product-item').get();
+    
+    products.sort(function(a, b) {
+        switch(sortType) {
+            case 'harga_terendah':
+                return $(a).data('harga') - $(b).data('harga');
+            case 'harga_tertinggi':
+                return $(b).data('harga') - $(a).data('harga');
+            case 'nama_az':
+                return $(a).data('nama').localeCompare($(b).data('nama'));
+            case 'nama_za':
+                return $(b).data('nama').localeCompare($(a).data('nama'));
+            default: // terbaru
+                return 0;
+        }
+    });
+    
+    $.each(products, function(idx, item) {
+        productGrid.append(item);
+    });
+});
+
+// Fungsi tambah ke keranjang (placeholder)
+function tambahKeKeranjang(idProduk) {
+    // TODO: Implementasi AJAX untuk tambah ke keranjang
+    alert('Fitur tambah ke keranjang untuk produk ID: ' + idProduk + ' akan segera tersedia');
+}
+</script>
+{% endblock %}
+

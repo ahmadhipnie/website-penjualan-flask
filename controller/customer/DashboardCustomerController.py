@@ -42,22 +42,34 @@ def produk():
 @customer_bp.route('/keranjang')
 @customer_required
 def keranjang():
-    """Halaman Keranjang Customer"""
+    """Halaman Katalog Produk (dulu keranjang)"""
     db = get_db()
     cursor = db.cursor()
     
-    # Ambil keranjang customer
+    # Ambil semua produk yang tersedia dengan kategori dan gambar
     cursor.execute("""
-        SELECT k.*, b.nama_barang, b.harga, b.stok,
-               (SELECT gambar_url FROM gambar_barangs WHERE id_barang = b.id AND is_primary = 1 LIMIT 1) as gambar_utama
-        FROM keranjangs k
-        JOIN barangs b ON k.id_barang = b.id
-        WHERE k.id_user = %s
-    """, (session['user_id'],))
-    keranjang_list = cursor.fetchall()
+        SELECT b.id, b.nama_barang, b.deskripsi, b.harga, b.stok, 
+               b.created_at, b.updated_at, b.id_kategori,
+               k.nama_kategori,
+               (SELECT gambar_url FROM gambar_barangs 
+                WHERE id_barang = b.id AND is_primary = 1 LIMIT 1) as gambar_utama
+        FROM barangs b 
+        LEFT JOIN kategoris k ON b.id_kategori = k.id
+        WHERE b.stok > 0
+        ORDER BY b.created_at DESC
+    """)
+    produk_list = cursor.fetchall()
+    
+    # Ambil semua kategori untuk filter
+    cursor.execute("SELECT id, nama_kategori FROM kategoris ORDER BY nama_kategori")
+    kategori_list = cursor.fetchall()
+    
     cursor.close()
     
-    return render_template('customer/keranjang/index.html', user=session, keranjang_list=keranjang_list)
+    return render_template('customer/keranjang/index.html', 
+                         user=session, 
+                         produk_list=produk_list,
+                         kategori_list=kategori_list)
 
 @customer_bp.route('/pesanan')
 @customer_required
