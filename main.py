@@ -1,6 +1,8 @@
 from flask import Flask, render_template, session, redirect, url_for, g
 from model.database import get_db
 from controller.auth.AuthController import auth_bp
+from controller.admin.KategoriController import kategori_bp
+from controller.admin.ProdukController import produk_bp
 import os
 
 app = Flask(__name__)
@@ -23,6 +25,8 @@ def close_db(error):
 
 # Register Blueprints
 app.register_blueprint(auth_bp, url_prefix='/auth')
+app.register_blueprint(kategori_bp)
+app.register_blueprint(produk_bp)
 
 # Route halaman utama
 @app.route('/')

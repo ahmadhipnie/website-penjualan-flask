@@ -1,0 +1,239 @@
+{% extends 'admin/layout/base_admin.html' %}
+
+{% block title %}Tambah Produk - Admin E-Commerce{% endblock %}
+
+{% block page_heading %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Tambah Produk Baru</h1>
+    <a href="{{ url_for('produk.index') }}" class="btn btn-secondary btn-icon-split">
+        <span class="icon text-white-50">
+            <i class="fas fa-arrow-left"></i>
+        </span>
+        <span class="text">Kembali</span>
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Informasi Produk</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" id="formProduk">
+                    <div class="form-group">
+                        <label for="nama_barang">Nama Produk <span class="text-danger">*</span></label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="nama_barang" 
+                               name="nama_barang" 
+                               placeholder="Masukkan nama produk"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_kategori">Kategori <span class="text-danger">*</span></label>
+                        <select class="form-control" id="id_kategori" name="id_kategori" required>
+                            <option value="">-- Pilih Kategori --</option>
+                            {% for kategori in kategoris %}
+                            <option value="{{ kategori.id }}">{{ kategori.nama_kategori }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="deskripsi">Deskripsi <span class="text-danger">*</span></label>
+                        <textarea class="form-control" 
+                                  id="deskripsi" 
+                                  name="deskripsi" 
+                                  rows="4"
+                                  placeholder="Deskripsi produk..."
+                                  required></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="harga">Harga (Rp) <span class="text-danger">*</span></label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="harga" 
+                                       name="harga" 
+                                       placeholder="0"
+                                       min="0"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="stok">Stok <span class="text-danger">*</span></label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="stok" 
+                                       name="stok" 
+                                       placeholder="0"
+                                       min="0"
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gambar">Gambar Produk</label>
+                        <div class="custom-file">
+                            <input type="file" 
+                                   class="custom-file-input" 
+                                   id="gambar" 
+                                   name="gambar[]"
+                                   multiple
+                                   accept="image/*"
+                                   onchange="previewImages(event)">
+                            <label class="custom-file-label" for="gambar">Pilih gambar (bisa lebih dari 1)</label>
+                        </div>
+                        <small class="form-text text-muted">
+                            Format: JPG, JPEG, PNG, GIF, WEBP. Gambar pertama akan menjadi gambar utama.
+                        </small>
+                    </div>
+
+                    <div id="imagePreview" class="row mt-3"></div>
+
+                    <hr>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Simpan Produk
+                        </button>
+                        <a href="{{ url_for('produk.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-info">
+                    <i class="fas fa-info-circle"></i> Informasi
+                </h6>
+            </div>
+            <div class="card-body">
+                <p><strong>Tips Menambah Produk:</strong></p>
+                <ul>
+                    <li>Gunakan nama produk yang jelas dan deskriptif</li>
+                    <li>Pilih kategori yang sesuai</li>
+                    <li>Isi deskripsi lengkap dengan detail produk</li>
+                    <li>Upload gambar dengan kualitas baik</li>
+                    <li>Gambar pertama akan menjadi gambar utama</li>
+                    <li>Pastikan harga dan stok sudah benar</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .image-preview {
+        position: relative;
+        margin-bottom: 10px;
+    }
+    .image-preview img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+    .image-preview .badge {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function previewImages(event) {
+    const files = event.target.files;
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = '';
+    
+    if (files.length > 0) {
+        // Update label
+        const label = document.querySelector('.custom-file-label');
+        if (files.length === 1) {
+            label.textContent = files[0].name;
+        } else {
+            label.textContent = files.length + ' gambar dipilih';
+        }
+        
+        // Show preview
+        Array.from(files).forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const col = document.createElement('div');
+                col.className = 'col-md-3 col-sm-4 col-6';
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'image-preview';
+                
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'img-thumbnail';
+                
+                wrapper.appendChild(img);
+                
+                if (index === 0) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge badge-primary';
+                    badge.textContent = 'Utama';
+                    wrapper.appendChild(badge);
+                }
+                
+                col.appendChild(wrapper);
+                preview.appendChild(col);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+}
+
+// Form validation
+document.getElementById('formProduk').addEventListener('submit', function(e) {
+    const nama = document.getElementById('nama_barang').value.trim();
+    const kategori = document.getElementById('id_kategori').value;
+    const harga = parseInt(document.getElementById('harga').value);
+    const stok = parseInt(document.getElementById('stok').value);
+    
+    if (!nama) {
+        e.preventDefault();
+        alert('Nama produk harus diisi!');
+        return false;
+    }
+    
+    if (!kategori) {
+        e.preventDefault();
+        alert('Kategori harus dipilih!');
+        return false;
+    }
+    
+    if (harga < 0) {
+        e.preventDefault();
+        alert('Harga tidak boleh negatif!');
+        return false;
+    }
+    
+    if (stok < 0) {
+        e.preventDefault();
+        alert('Stok tidak boleh negatif!');
+        return false;
+    }
+});
+</script>
+{% endblock %}
