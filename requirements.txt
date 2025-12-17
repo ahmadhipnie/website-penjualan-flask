@@ -1,5 +1,37 @@
-# Requirements untuk Flask E-Commerce
-Flask==3.0.0
-Flask-MySQLdb==2.0.0
-mysqlclient==2.2.0
-Werkzeug==3.0.1
+# Flask E-Commerce Requirements
+# Python 3.8+
+
+# Core Framework
+Flask>=2.3.0,<4.0.0
+Werkzeug>=2.3.0,<4.0.0
+
+# Database
+# Pilih salah satu:
+# Option 1: Flask-MySQLdb (Recommended untuk Windows/Linux dengan MySQL)
+Flask-MySQLdb>=2.0.0
+mysqlclient>=2.2.0
+
+# Option 2: PyMySQL (Pure Python, lebih mudah diinstall)
+# Uncomment jika mysqlclient gagal diinstall:
+# PyMySQL>=1.1.0
+
+# Utilities
+python-dotenv>=1.0.0
+
+# ===================================================================
+# CATATAN INSTALASI:
+# ===================================================================
+# 
+# Windows:
+#   1. Install Microsoft C++ Build Tools jika mysqlclient error:
+#      https://visualstudio.microsoft.com/visual-cpp-build-tools/
+#   2. Atau gunakan PyMySQL (uncomment di atas, comment mysqlclient)
+#
+# Linux (Ubuntu/Debian):
+#   sudo apt-get install python3-dev default-libmysqlclient-dev build-essential
+#
+# macOS:
+#   brew install mysql-client
+#   export PATH="/usr/local/opt/mysql-client/bin:$PATH"
+#
+# ===================================================================
