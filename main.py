@@ -1,12 +1,9 @@
 from flask import Flask, render_template, session, redirect, url_for, g
 from model.database import get_db
 from controller.auth.AuthController import auth_bp
-<<<<<<< Updated upstream
-=======
 from controller.admin.KategoriController import kategori_bp
 from controller.admin.ProdukController import produk_bp
 from controller.admin.JenisEkspedisiController import jenis_ekspedisi_bp
->>>>>>> Stashed changes
 import os
 
 app = Flask(__name__)
@@ -29,12 +26,9 @@ def close_db(error):
 
 # Register Blueprints
 app.register_blueprint(auth_bp, url_prefix='/auth')
-<<<<<<< Updated upstream
-=======
 app.register_blueprint(kategori_bp)
 app.register_blueprint(produk_bp)
 app.register_blueprint(jenis_ekspedisi_bp)
->>>>>>> Stashed changes
 
 # Route halaman utama
 @app.route('/')
