@@ -50,29 +50,29 @@
 <div class="row" id="productGrid">
     {% if produk_list %}
         {% for produk in produk_list %}
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-item" data-kategori="{{ produk[7] }}" data-nama="{{ produk[1]|lower }}" data-harga="{{ produk[3] }}">
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-item" data-kategori="{{ produk.id_kategori }}" data-nama="{{ produk.nama_barang|lower }}" data-harga="{{ produk.harga }}">
             <div class="card h-100 shadow-sm">
-                {% if produk[9] %}
-                <img src="{{ url_for('static', filename='gambar_produk/' + produk[9]) }}" class="card-img-top" alt="{{ produk[1] }}" style="height: 200px; object-fit: cover;">
+                {% if produk.gambar_utama %}
+                <img src="{{ url_for('static', filename='gambar_produk/' + produk.gambar_utama) }}" class="card-img-top" alt="{{ produk.nama_barang }}" style="height: 200px; object-fit: cover;">
                 {% else %}
-                <img src="{{ url_for('static', filename='assets_landing/img/product-1.jpg') }}" class="card-img-top" alt="{{ produk[1] }}" style="height: 200px; object-fit: cover;">
+                <img src="{{ url_for('static', filename='assets_landing/img/product-1.jpg') }}" class="card-img-top" alt="{{ produk.nama_barang }}" style="height: 200px; object-fit: cover;">
                 {% endif %}
                 <div class="card-body d-flex flex-column">
                     <div class="mb-2">
-                        {% if produk[8] %}
-                        <span class="badge badge-info badge-sm">{{ produk[8] }}</span>
+                        {% if produk.nama_kategori %}
+                        <span class="badge badge-info badge-sm">{{ produk.nama_kategori }}</span>
                         {% endif %}
                     </div>
-                    <h6 class="card-title">{{ produk[1] }}</h6>
+                    <h6 class="card-title">{{ produk.nama_barang }}</h6>
                     <p class="card-text text-muted small" style="height: 40px; overflow: hidden;">
-                        {{ produk[2][:80] }}{% if produk[2]|length > 80 %}...{% endif %}
+                        {{ produk.deskripsi[:80] }}{% if produk.deskripsi|length > 80 %}...{% endif %}
                     </p>
                     <div class="mt-auto">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h5 class="text-primary mb-0">Rp {{ "{:,.0f}".format(produk[3]) }}</h5>
-                            <small class="text-muted">Stok: {{ produk[4] }}</small>
+                            <h5 class="text-primary mb-0">Rp {{ "{:,.0f}".format(produk.harga) }}</h5>
+                            <small class="text-muted">Stok: {{ produk.stok }}</small>
                         </div>
-                        <button class="btn btn-primary btn-block btn-sm" onclick="tambahKeKeranjang({{ produk[0] }})">
+                        <button class="btn btn-primary btn-block btn-sm" onclick="tambahKeKeranjang({{ produk.id }})">
                             <i class="fas fa-cart-plus"></i> Tambah
                         </button>
                     </div>

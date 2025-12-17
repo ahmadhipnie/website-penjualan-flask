@@ -19,31 +19,16 @@
                          class="img-fluid rounded-circle" style="width: 100px;" alt="Profile">
                 </div>
                 {% if user_data %}
-                <h5 class="font-weight-bold">{{ user_data[1] }}</h5>
-                <p class="text-muted">{{ user_data[7].title() if user_data[7] else 'Customer' }}</p>
-                <p><i class="fas fa-envelope"></i> {{ user_data[2] }}</p>
-                <p><i class="fas fa-phone"></i> {{ user_data[3] }}</p>
+                <h5 class="font-weight-bold">{{ user_data.nama }}</h5>
+                <p class="text-muted">{{ user_data.role.title() if user_data.role else 'Customer' }}</p>
+                <p><i class="fas fa-envelope"></i> {{ user_data.email }}</p>
+                <p><i class="fas fa-phone"></i> {{ user_data.nomor_telepon }}</p>
                 {% endif %}
             </div>
         </div>
 
         <!-- Menu Cepat -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Menu Cepat</h6>
-            </div>
-            <div class="list-group list-group-flush">
-                <a href="{{ url_for('customer.alamat') }}" class="list-group-item list-group-item-action">
-                    <i class="fas fa-map-marker-alt"></i> Alamat Saya
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                    <i class="fas fa-lock"></i> Ubah Password
-                </a>
-                <a href="{{ url_for('auth.logout') }}" class="list-group-item list-group-item-action text-danger">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-            </div>
-        </div>
+        
     </div>
 
     <div class="col-lg-8">
@@ -59,23 +44,23 @@
                 {% if user_data %}
                 <div class="row mb-3">
                     <div class="col-md-4"><strong>Nama Lengkap</strong></div>
-                    <div class="col-md-8">{{ user_data[1] }}</div>
+                    <div class="col-md-8">{{ user_data.nama }}</div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-4"><strong>Email</strong></div>
-                    <div class="col-md-8">{{ user_data[2] }}</div>
+                    <div class="col-md-8">{{ user_data.email }}</div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-4"><strong>Nomor Telepon</strong></div>
-                    <div class="col-md-8">{{ user_data[3] }}</div>
+                    <div class="col-md-8">{{ user_data.nomor_telepon }}</div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-4"><strong>Tanggal Lahir</strong></div>
-                    <div class="col-md-8">{{ user_data[4].strftime('%d %B %Y') if user_data[4] else '-' }}</div>
+                    <div class="col-md-8">{{ user_data.tanggal_lahir.strftime('%d %B %Y') if user_data.tanggal_lahir else '-' }}</div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-4"><strong>Jenis Kelamin</strong></div>
-                    <div class="col-md-8">{{ 'Laki-laki' if user_data[5] == 'L' else 'Perempuan' }}</div>
+                    <div class="col-md-8">{{ 'Laki-laki' if user_data.jenis_kelamin == 'L' else 'Perempuan' }}</div>
                 </div>
                 {% endif %}
             </div>
@@ -95,9 +80,9 @@
                     <div class="border p-3 mb-3 rounded">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <p class="mb-1">{{ alamat[1] }}</p>
+                                <p class="mb-1"><strong>{{ alamat.alamat }}</strong></p>
                                 <p class="text-muted mb-0">
-                                    {{ alamat[3] }}, {{ alamat[2] }}, {{ alamat[4] }} - {{ alamat[5] }}
+                                    {{ alamat.kecamatan }}, {{ alamat.kabupaten }}, {{ alamat.provinsi }} - {{ alamat.kode_pos }}
                                 </p>
                             </div>
                             <div>

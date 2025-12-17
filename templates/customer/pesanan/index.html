@@ -29,36 +29,36 @@
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <div>
                 <h6 class="m-0 font-weight-bold text-primary">
-                    <i class="fas fa-shopping-bag"></i> {{ pesanan[3] }}
+                    <i class="fas fa-shopping-bag"></i> {{ pesanan.kode_transaksi }}
                 </h6>
-                <small class="text-muted">{{ pesanan[11].strftime('%d %B %Y') if pesanan[11] else '' }}</small>
+                <small class="text-muted">{{ pesanan.created_at.strftime('%d %B %Y') if pesanan.created_at else '' }}</small>
             </div>
-            <span class="badge badge-{{ 'warning' if pesanan[7] == 'menunggu_pembayaran' else 'info' if pesanan[7] == 'sedang_diproses' else 'primary' if pesanan[7] == 'dikirim' else 'success' }} badge-pill">
-                {{ pesanan[7].replace('_', ' ').title() }}
+            <span class="badge badge-{{ 'warning' if pesanan.status == 'menunggu_pembayaran' else 'info' if pesanan.status == 'sedang_diproses' else 'primary' if pesanan.status == 'dikirim' else 'success' }} badge-pill">
+                {{ pesanan.status.replace('_', ' ').title() }}
             </span>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-8">
                     <p><strong>Alamat Pengiriman:</strong></p>
-                    <p>{{ pesanan[6] }}</p>
-                    {% if pesanan[13] %}
-                    <p><strong>Ekspedisi:</strong> {{ pesanan[13] }}</p>
+                    <p>{{ pesanan.alamat_pengiriman }}</p>
+                    {% if pesanan.nama_ekspedisi %}
+                    <p><strong>Ekspedisi:</strong> {{ pesanan.nama_ekspedisi }}</p>
                     {% endif %}
-                    {% if pesanan[4] %}
-                    <p><strong>Nomor Resi:</strong> {{ pesanan[4] }}</p>
+                    {% if pesanan.nomor_resi %}
+                    <p><strong>Nomor Resi:</strong> {{ pesanan.nomor_resi }}</p>
                     {% endif %}
                 </div>
                 <div class="col-md-4 text-right">
-                    <h5 class="text-primary">Rp {{ "{:,.0f}".format(pesanan[10]) }}</h5>
+                    <h5 class="text-primary">Rp {{ "{:,.0f}".format(pesanan.total_harga) }}</h5>
                     <a href="#" class="btn btn-sm btn-outline-primary">
                         <i class="fas fa-eye"></i> Detail
                     </a>
-                    {% if pesanan[7] == 'menunggu_pembayaran' %}
+                    {% if pesanan.status == 'menunggu_pembayaran' %}
                     <button class="btn btn-sm btn-primary">
                         <i class="fas fa-credit-card"></i> Bayar
                     </button>
-                    {% elif pesanan[7] == 'dikirim' %}
+                    {% elif pesanan.status == 'dikirim' %}
                     <button class="btn btn-sm btn-success">
                         <i class="fas fa-check"></i> Konfirmasi Terima
                     </button>
