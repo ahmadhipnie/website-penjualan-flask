@@ -25,7 +25,7 @@ def login():
         if user:
             # Set session
             session['user_id'] = user['id']
-            session['nama'] = user['nama']
+            session['name'] = user['nama']
             session['email'] = user['email']
             session['role'] = user['role']
             
@@ -35,7 +35,8 @@ def login():
             if user['role'] == 'admin':
                 return redirect(url_for('admin_dashboard'))
             else:
-                return redirect(url_for('customer.dashboard'))
+                # Customer redirect ke landing page
+                return redirect(url_for('landing.index'))
         else:
             flash('Email atau password salah!', 'danger')
             return render_template('auth/login.html')
@@ -90,7 +91,15 @@ def register():
 
 @auth_bp.route('/logout')
 def logout():
+    # Simpan role sebelum clear session untuk redirect
+    user_role = session.get('role')
+    
     # Hapus semua data session
     session.clear()
     flash('Anda telah logout.', 'info')
-    return redirect(url_for('auth.login'))
+    
+    # Redirect berdasarkan role sebelumnya
+    if user_role == 'customer':
+        return redirect(url_for('landing.index'))
+    else:
+        return redirect(url_for('auth.login'))

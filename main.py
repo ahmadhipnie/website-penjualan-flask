@@ -3,6 +3,7 @@ from model.database import get_db
 from controller.auth.AuthController import auth_bp
 from controller.admin.KategoriController import kategori_bp
 from controller.admin.ProdukController import produk_bp
+from controller.landing.LandingController import landing_bp
 from controller.admin.JenisEkspedisiController import jenis_ekspedisi_bp
 from controller.customer.DashboardCustomerController import customer_bp
 import os
@@ -29,6 +30,7 @@ def close_db(error):
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(kategori_bp)
 app.register_blueprint(produk_bp)
+app.register_blueprint(landing_bp, url_prefix='/landing')
 app.register_blueprint(jenis_ekspedisi_bp)
 app.register_blueprint(customer_bp, url_prefix='/customer')
 
@@ -41,7 +43,8 @@ def index():
             return redirect(url_for('admin_dashboard'))
         else:
             return redirect(url_for('customer_dashboard'))
-    return redirect(url_for('auth.login'))
+    # Redirect ke landing page jika belum login
+    return redirect(url_for('landing.index'))
 
 # Route dashboard admin
 @app.route('/admin/dashboard')
