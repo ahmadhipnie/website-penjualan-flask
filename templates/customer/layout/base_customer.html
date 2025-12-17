@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Customer - E-Commerce{% endblock %}</title>
+    <link href="{{ url_for('static', filename='assets_sb_admin/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='assets_sb_admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body id="page-top">
+    <div id="wrapper">
+        <!-- Sidebar -->
+        {% include 'customer/layout/sidebar_customer.html' %}
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <!-- Topbar -->
+                {% include 'customer/layout/topbar_customer.html' %}
+
+                <!-- Page Content -->
+                <div class="container-fluid">
+                    <!-- Flash Messages -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- Page Heading -->
+                    {% block page_heading %}{% endblock %}
+
+                    <!-- Main Content -->
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+
+            <!-- Footer -->
+            {% include 'customer/layout/footer_customer.html' %}
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ url_for('static', filename='assets_sb_admin/vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets_sb_admin/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets_sb_admin/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets_sb_admin/js/sb-admin-2.min.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -47,7 +47,7 @@ def admin_dashboard():
 def customer_dashboard():
     if 'user_id' not in session or session.get('role') != 'customer':
         return redirect(url_for('auth.login'))
-    return render_template('customer/dashboard.html', user=session)
+    return render_template('customer/dashboard/index.html', user=session)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

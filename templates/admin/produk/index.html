@@ -1,11 +1,152 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'admin/layout/base_admin.html' %}
+
+{% block title %}Manajemen Produk - Admin E-Commerce{% endblock %}
+
+{% block page_heading %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Manajemen Produk</h1>
+    <a href="#" class="btn btn-primary btn-icon-split">
+        <span class="icon text-white-50">
+            <i class="fas fa-plus"></i>
+        </span>
+        <span class="text">Tambah Produk</span>
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Daftar Produk</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Gambar</th>
+                        <th>Nama Produk</th>
+                        <th>Kategori</th>
+                        <th>Harga</th>
+                        <th>Stok</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Contoh Data Statis (nanti diganti dengan data dari database) -->
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <img src="{{ url_for('static', filename='assets_sb_admin/img/undraw_profile.svg') }}" 
+                                 alt="Product" class="img-thumbnail" style="width: 50px;">
+                        </td>
+                        <td>Sofa Minimalis Modern</td>
+                        <td><span class="badge badge-info">Furniture</span></td>
+                        <td>Rp 3.500.000</td>
+                        <td>15</td>
+                        <td><span class="badge badge-success">Aktif</span></td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-info" title="Detail">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="#" class="btn btn-sm btn-warning" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="#" class="btn btn-sm btn-danger" title="Hapus">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>
+                            <img src="{{ url_for('static', filename='assets_sb_admin/img/undraw_profile.svg') }}" 
+                                 alt="Product" class="img-thumbnail" style="width: 50px;">
+                        </td>
+                        <td>Meja Makan Kayu Jati</td>
+                        <td><span class="badge badge-info">Furniture</span></td>
+                        <td>Rp 5.000.000</td>
+                        <td>8</td>
+                        <td><span class="badge badge-success">Aktif</span></td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-info" title="Detail">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="#" class="btn btn-sm btn-warning" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="#" class="btn btn-sm btn-danger" title="Hapus">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Info Cards -->
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Informasi</h6>
+            </div>
+            <div class="card-body">
+                <p>Halaman ini adalah contoh penggunaan template layout system.</p>
+                <p>Dengan template system, Anda hanya perlu:</p>
+                <ul>
+                    <li>Extends dari base template</li>
+                    <li>Override block yang diperlukan</li>
+                    <li>Fokus pada konten halaman</li>
+                </ul>
+                <p class="mb-0">Sidebar, topbar, dan footer sudah otomatis ter-include.</p>
+            </div>
+        </div>
+    </div>
     
-</body>
-</html>
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-success">Quick Stats</h6>
+            </div>
+            <div class="card-body">
+                <h4 class="small font-weight-bold">Produk Aktif <span class="float-right">80%</span></h4>
+                <div class="progress mb-4">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 80%"></div>
+                </div>
+                <h4 class="small font-weight-bold">Stok Rendah <span class="float-right">20%</span></h4>
+                <div class="progress mb-4">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 20%"></div>
+                </div>
+                <h4 class="small font-weight-bold">Produk Habis <span class="float-right">5%</span></h4>
+                <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: 5%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link href="{{ url_for('static', filename='assets_sb_admin/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='assets_sb_admin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets_sb_admin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
+            }
+        });
+    });
+</script>
+{% endblock %}

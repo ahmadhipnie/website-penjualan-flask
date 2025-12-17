@@ -1,11 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+<!-- Sidebar Customer -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('customer_dashboard') }}">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-shopping-cart"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">E-Commerce</div>
+    </a>
+    <hr class="sidebar-divider my-0">
+    <li class="nav-item {{ 'active' if request.endpoint == 'customer_dashboard' }}">
+        <a class="nav-link" href="{{ url_for('customer_dashboard') }}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+    </li>
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading">Menu</div>
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-fw fa-shopping-bag"></i>
+            <span>Produk</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-fw fa-shopping-cart"></i>
+            <span>Keranjang</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-fw fa-box"></i>
+            <span>Pesanan</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </li>
+    <hr class="sidebar-divider d-none d-md-block">
+</ul>

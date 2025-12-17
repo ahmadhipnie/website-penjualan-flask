@@ -1,0 +1,243 @@
+{% extends 'customer/layout/base_customer.html' %}
+
+{% block title %}Daftar Produk - E-Commerce{% endblock %}
+
+{% block page_heading %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Daftar Produk</h1>
+    <div>
+        <select class="custom-select" id="kategoriFilter">
+            <option selected>Semua Kategori</option>
+            <option value="furniture">Furniture</option>
+            <option value="electronics">Electronics</option>
+            <option value="decoration">Decoration</option>
+        </select>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Filter & Search -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Cari produk...">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search"></i> Cari
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <select class="custom-select">
+                    <option selected>Urutkan: Terbaru</option>
+                    <option value="1">Harga Terendah</option>
+                    <option value="2">Harga Tertinggi</option>
+                    <option value="3">Nama A-Z</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Grid -->
+<div class="row">
+    <!-- Product Card 1 -->
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        <div class="card h-100 shadow">
+            <img class="card-img-top" src="{{ url_for('static', filename='assets_sb_admin/img/undraw_profile.svg') }}" alt="Product">
+            <div class="card-body">
+                <h5 class="card-title">Sofa Minimalis Modern</h5>
+                <p class="card-text text-muted small">Furniture</p>
+                <h4 class="text-primary">Rp 3.500.000</h4>
+                <div class="mb-2">
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star-half-alt text-warning"></i>
+                    <span class="text-muted small">(4.5)</span>
+                </div>
+                <span class="badge badge-success mb-2">Stok: 15</span>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a href="#" class="btn btn-primary btn-block">
+                    <i class="fas fa-shopping-cart"></i> Tambah ke Keranjang
+                </a>
+                <a href="#" class="btn btn-outline-info btn-block btn-sm">
+                    <i class="fas fa-eye"></i> Detail Produk
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Card 2 -->
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        <div class="card h-100 shadow">
+            <img class="card-img-top" src="{{ url_for('static', filename='assets_sb_admin/img/undraw_profile.svg') }}" alt="Product">
+            <div class="card-body">
+                <h5 class="card-title">Meja Makan Kayu Jati</h5>
+                <p class="card-text text-muted small">Furniture</p>
+                <h4 class="text-primary">Rp 5.000.000</h4>
+                <div class="mb-2">
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <span class="text-muted small">(5.0)</span>
+                </div>
+                <span class="badge badge-warning mb-2">Stok: 8</span>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a href="#" class="btn btn-primary btn-block">
+                    <i class="fas fa-shopping-cart"></i> Tambah ke Keranjang
+                </a>
+                <a href="#" class="btn btn-outline-info btn-block btn-sm">
+                    <i class="fas fa-eye"></i> Detail Produk
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Card 3 -->
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        <div class="card h-100 shadow">
+            <div class="position-relative">
+                <img class="card-img-top" src="{{ url_for('static', filename='assets_sb_admin/img/undraw_profile.svg') }}" alt="Product">
+                <span class="badge badge-danger position-absolute" style="top: 10px; right: 10px;">SOLD OUT</span>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Kursi Gaming Ergonomis</h5>
+                <p class="card-text text-muted small">Electronics</p>
+                <h4 class="text-primary">Rp 2.500.000</h4>
+                <div class="mb-2">
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="far fa-star text-warning"></i>
+                    <span class="text-muted small">(4.0)</span>
+                </div>
+                <span class="badge badge-danger mb-2">Stok Habis</span>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <button class="btn btn-secondary btn-block" disabled>
+                    <i class="fas fa-times"></i> Stok Habis
+                </button>
+                <a href="#" class="btn btn-outline-info btn-block btn-sm">
+                    <i class="fas fa-eye"></i> Detail Produk
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Card 4 -->
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        <div class="card h-100 shadow">
+            <div class="position-relative">
+                <img class="card-img-top" src="{{ url_for('static', filename='assets_sb_admin/img/undraw_profile.svg') }}" alt="Product">
+                <span class="badge badge-success position-absolute" style="top: 10px; right: 10px;">NEW</span>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Lampu Gantung LED</h5>
+                <p class="card-text text-muted small">Decoration</p>
+                <h4 class="text-primary">Rp 750.000</h4>
+                <div class="mb-2">
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <span class="text-muted small">(5.0)</span>
+                </div>
+                <span class="badge badge-success mb-2">Stok: 25</span>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a href="#" class="btn btn-primary btn-block">
+                    <i class="fas fa-shopping-cart"></i> Tambah ke Keranjang
+                </a>
+                <a href="#" class="btn btn-outline-info btn-block btn-sm">
+                    <i class="fas fa-eye"></i> Detail Produk
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pagination -->
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="Product pagination">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Info Section -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <h5 class="text-center mb-3">
+                    <i class="fas fa-info-circle text-primary"></i> 
+                    Tentang Halaman Ini
+                </h5>
+                <p class="text-center text-muted">
+                    Ini adalah contoh halaman produk menggunakan template layout system.<br>
+                    Template ini sudah include sidebar, topbar, footer secara otomatis.<br>
+                    Anda hanya perlu fokus pada konten halaman saja!
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+    .position-relative {
+        position: relative;
+    }
+    .position-absolute {
+        position: absolute;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Filter kategori
+    $('#kategoriFilter').on('change', function() {
+        var kategori = $(this).val();
+        console.log('Filter kategori:', kategori);
+        // Di sini bisa ditambahkan logic untuk filter produk
+    });
+
+    // Tambah ke keranjang
+    $('.btn-primary').on('click', function(e) {
+        if ($(this).find('.fa-shopping-cart').length > 0) {
+            e.preventDefault();
+            alert('Produk berhasil ditambahkan ke keranjang!');
+            // Di sini bisa ditambahkan logic untuk add to cart
+        }
+    });
+</script>
+{% endblock %}
