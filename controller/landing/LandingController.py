@@ -331,10 +331,6 @@ def checkout():
     """, (session['user_id'],))
     user = cursor.fetchone()
     
-    # Ambil list ekspedisi
-    cursor.execute("SELECT * FROM jenis_ekspedisis ORDER BY nama_ekspedisi ASC")
-    ekspedisi_list = cursor.fetchall()
-    
     # Ambil cart items
     cursor.execute("""
         SELECT k.id as keranjang_id, k.jumlah, k.id_barang,
@@ -352,19 +348,20 @@ def checkout():
     # Hitung total
     total = sum(item['subtotal'] for item in cart_items)
     
-    # Dummy alamat untuk sementara
-    dummy_alamat = [
-        {'id': 1, 'alamat': 'Jl. Merdeka No. 123', 'kecamatan': 'Semarang Tengah', 'kabupaten': 'Kota Semarang', 'provinsi': 'Jawa Tengah', 'kode_pos': '50132'},
-        {'id': 2, 'alamat': 'Jl. Sudirman No. 456', 'kecamatan': 'Semarang Barat', 'kabupaten': 'Kota Semarang', 'provinsi': 'Jawa Tengah', 'kode_pos': '50144'},
-        {'id': 3, 'alamat': 'Jl. Pemuda No. 789', 'kecamatan': 'Semarang Timur', 'kabupaten': 'Kota Semarang', 'provinsi': 'Jawa Tengah', 'kode_pos': '50135'},
-    ]
+    # Ambil alamat user dari database
+    cursor.execute("""
+        SELECT id, alamat, provinsi, kabupaten, kecamatan, kode_pos 
+        FROM alamat_users 
+        WHERE id_user = %s 
+        ORDER BY created_at DESC
+    """, (session['user_id'],))
+    alamat_list = cursor.fetchall()
     
     cursor.close()
     
     return render_template('landing/checkout.html',
                          user=user,
-                         alamat_list=dummy_alamat,
-                         ekspedisi_list=ekspedisi_list,
+                         alamat_list=alamat_list,
                          cart_items=cart_items,
                          total=total)
 
@@ -377,10 +374,9 @@ def checkout_process():
     try:
         data = request.get_json()
         alamat_id = data.get('alamat_id')
-        ekspedisi_id = data.get('ekspedisi_id')
         alamat_text = data.get('alamat_text')  # Full alamat string
         
-        if not ekspedisi_id or not alamat_text:
+        if not alamat_text:
             return jsonify({'success': False, 'message': 'Data tidak lengkap'}), 400
         
         db = get_db()
@@ -470,7 +466,7 @@ def checkout_process():
             (id_user, id_jenis_ekspedisi, kode_transaksi, snap_token, alamat_pengiriman, 
              status, total_harga, created_at, updated_at)
             VALUES (%s, %s, %s, %s, %s, %s, %s, NOW(), NOW())
-        """, (session['user_id'], ekspedisi_id, kode_transaksi, snap_token, 
+        """, (session['user_id'], None, kode_transaksi, snap_token, 
               alamat_text, 'menunggu_pembayaran', total_harga))
         
         penjualan_id = cursor.lastrowid

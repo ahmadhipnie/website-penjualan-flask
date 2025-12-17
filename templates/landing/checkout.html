@@ -128,7 +128,7 @@
               >
                 <i class="fas fa-tachometer-alt mr-2"></i>Dashboard Customer
               </a>
-              <a class="dropdown-item" href="{{ url_for('landing.cart') }}">
+              <a class="dropdown-item" href="{{ url_for('customer.cart') }}">
                 <i class="fas fa-shopping-bag mr-2"></i>Lihat Keranjang Saya
               </a>
               <div class="dropdown-divider"></div>
@@ -251,20 +251,13 @@
                   {% endfor %}
                 </select>
                 <small class="form-text text-muted">
-                  <a href="#" class="text-primary">
+                  <a
+                    href="{{ url_for('customer.profil') }}"
+                    class="text-primary"
+                  >
                     <i class="fa fa-plus mr-1"></i>Tambah Alamat Baru
                   </a>
-                  (Fitur akan segera tersedia)
                 </small>
-              </div>
-              <div class="form-group">
-                <label>Ekspedisi <span class="text-danger">*</span></label>
-                <select class="form-control" id="ekspedisi-select" required>
-                  <option value="">Pilih Ekspedisi</option>
-                  {% for eks in ekspedisi_list %}
-                  <option value="{{ eks.id }}">{{ eks.nama_ekspedisi }}</option>
-                  {% endfor %}
-                </select>
               </div>
             </div>
           </div>
@@ -400,17 +393,11 @@
         // Handle payment button
         $("#btn-pay-now").on("click", function () {
           var alamatId = $("#alamat-select").val();
-          var ekspedisiId = $("#ekspedisi-select").val();
           var $btn = $(this);
 
           // Validasi
           if (!alamatId) {
             alert("Silakan pilih alamat pengiriman");
-            return;
-          }
-
-          if (!ekspedisiId) {
-            alert("Silakan pilih ekspedisi");
             return;
           }
 
@@ -429,7 +416,6 @@
             contentType: "application/json",
             data: JSON.stringify({
               alamat_id: alamatId,
-              ekspedisi_id: ekspedisiId,
               alamat_text: alamatText,
             }),
             success: function (response) {
