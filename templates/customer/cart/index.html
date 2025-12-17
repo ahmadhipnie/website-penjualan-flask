@@ -5,9 +5,6 @@
 {% block page_heading %}
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Keranjang Belanja</h1>
-    <a href="{{ url_for('customer.keranjang') }}" class="btn btn-primary btn-sm">
-        <i class="fas fa-shopping-bag"></i> Lanjut Belanja
-    </a>
 </div>
 {% endblock %}
 
@@ -17,10 +14,11 @@
     <div class="col-lg-8">
         <!-- Keranjang Items -->
         <div class="card shadow mb-4">
-            <div class="card-header py-3">
+            <div class="card-header py-3 d-flex align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">
                     <i class="fas fa-shopping-cart"></i> Item di Keranjang ({{ keranjang_items|length }})
                 </h6>
+                <a href="{{ url_for('landing.cart') }}" class="btn btn-sm btn-outline-primary">Edit Keranjang</a>
             </div>
             <div class="card-body">
                 {% for item in keranjang_items %}
@@ -45,28 +43,14 @@
                         <small class="text-muted">per item</small>
                     </div>
                     <div class="col-md-2">
-                        <div class="input-group input-group-sm">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" type="button" onclick="updateQty({{ item.id }}, -1, {{ item.stok }})">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="number" class="form-control text-center" id="qty-{{ item.id }}" 
-                                   value="{{ item.jumlah }}" min="1" max="{{ item.stok }}" readonly>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" onclick="updateQty({{ item.id }}, 1, {{ item.stok }})">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
+                        <div class="text-center">
+                            <span class="badge badge-secondary p-2">Jumlah: {{ item.jumlah }}</span>
                         </div>
                     </div>
                     <div class="col-md-2 text-right">
                         <p class="mb-2 font-weight-bold text-primary" id="subtotal-{{ item.id }}">
                             Rp {{ "{:,.0f}".format(item.harga * item.jumlah) }}
                         </p>
-                        <button class="btn btn-danger btn-sm" onclick="hapusItem({{ item.id }})" title="Hapus dari keranjang">
-                            <i class="fas fa-trash"></i>
-                        </button>
                     </div>
                 </div>
                 {% endfor %}
@@ -101,11 +85,8 @@
                     <strong>Total</strong>
                     <strong class="text-primary" id="total-display">Rp {{ "{:,.0f}".format(total.value) }}</strong>
                 </div>
-                <button class="btn btn-primary btn-block" onclick="checkout()">
+                <a href="{{ url_for('landing.checkout') }}" class="btn btn-primary btn-block">
                     <i class="fas fa-credit-card"></i> Lanjut ke Pembayaran
-                </button>
-                <a href="{{ url_for('customer.keranjang') }}" class="btn btn-outline-secondary btn-block">
-                    <i class="fas fa-shopping-bag"></i> Lanjut Belanja
                 </a>
             </div>
         </div>
@@ -134,9 +115,6 @@
                 <i class="fas fa-shopping-cart fa-5x text-gray-300 mb-4"></i>
                 <h4 class="text-gray-600 mb-3">Keranjang Belanja Kosong</h4>
                 <p class="text-gray-500 mb-4">Anda belum menambahkan produk ke keranjang</p>
-                <a href="{{ url_for('customer.keranjang') }}" class="btn btn-primary btn-lg">
-                    <i class="fas fa-shopping-bag"></i> Mulai Belanja
-                </a>
             </div>
         </div>
     </div>
@@ -146,97 +124,19 @@
 
 {% block extra_js %}
 <script>
-// Update quantity item
-function updateQty(itemId, change, maxStok) {
-    var qtyInput = document.getElementById('qty-' + itemId);
-    var currentQty = parseInt(qtyInput.value);
-    var newQty = currentQty + change;
-    
-    // Validasi qty
-    if (newQty < 1 || newQty > maxStok) {
-        if (newQty > maxStok) {
-            alert('Jumlah melebihi stok yang tersedia!');
-        }
-        return;
-    }
-    
-    // Update qty via AJAX
-    $.ajax({
-        url: '/customer/cart/update/' + itemId,
-        method: 'POST',
-        data: {
-            jumlah: newQty
-        },
-        success: function(response) {
-            if (response.success) {
-                // Update tampilan
-                qtyInput.value = newQty;
-                
-                // Update subtotal item
-                var harga = response.harga;
-                var subtotal = harga * newQty;
-                document.getElementById('subtotal-' + itemId).innerHTML = 
-                    'Rp ' + subtotal.toLocaleString('id-ID');
-                
-                // Update total
-                updateTotal();
-            } else {
-                alert('Gagal update keranjang: ' + response.message);
-            }
-        },
-        error: function() {
-            alert('Terjadi kesalahan saat update keranjang');
-        }
-    });
-}
-
-// Hapus item dari keranjang
-function hapusItem(itemId) {
-    if (!confirm('Hapus item ini dari keranjang?')) {
-        return;
-    }
-    
-    $.ajax({
-        url: '/customer/cart/remove/' + itemId,
-        method: 'POST',
-        success: function(response) {
-            if (response.success) {
-                // Hapus dari tampilan
-                $('#cart-item-' + itemId).fadeOut(300, function() {
-                    $(this).remove();
-                    updateTotal();
-                    
-                    // Cek jika keranjang kosong
-                    if ($('.card-body .row').length === 0) {
-                        location.reload();
-                    }
-                });
-            } else {
-                alert('Gagal hapus item: ' + response.message);
-            }
-        },
-        error: function() {
-            alert('Terjadi kesalahan saat hapus item');
-        }
-    });
-}
-
 // Update total keseluruhan
 function updateTotal() {
     var total = 0;
     $('[id^="subtotal-"]').each(function() {
         var subtotalText = $(this).text().replace('Rp ', '').replace(/\./g, '');
         total += parseInt(subtotalText);
+    
     });
     
     $('#subtotal-display').text('Rp ' + total.toLocaleString('id-ID'));
     $('#total-display').text('Rp ' + total.toLocaleString('id-ID'));
 }
 
-// Checkout
-function checkout() {
-    // TODO: Implementasi checkout
-    alert('Fitur checkout akan segera tersedia');
-}
+// Checkout handled by /landing/checkout (no client-side stub needed)
 </script>
 {% endblock %}
