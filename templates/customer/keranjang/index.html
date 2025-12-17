@@ -1,0 +1,91 @@
+{% extends 'customer/layout/base_customer.html' %}
+
+{% block title %}Keranjang Belanja - E-Commerce{% endblock %}
+
+{% block page_heading %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Keranjang Belanja</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Keranjang Items -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Item di Keranjang</h6>
+            </div>
+            <div class="card-body">
+                {% if keranjang_list %}
+                    {% for item in keranjang_list %}
+                    <div class="row mb-3 pb-3 border-bottom">
+                        <div class="col-md-2">
+                            <img src="{{ url_for('static', filename='assets_landing/img/product-1.jpg') }}" class="img-fluid" alt="{{ item[3] }}">
+                        </div>
+                        <div class="col-md-4">
+                            <h6>{{ item[3] }}</h6>
+                            <p class="text-muted">Stok: {{ item[5] }}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="font-weight-bold">Rp {{ "{:,.0f}".format(item[4]) }}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control" value="{{ item[2] }}" min="1" max="{{ item[5] }}">
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <p class="font-weight-bold text-primary">Rp {{ "{:,.0f}".format(item[4] * item[2]) }}</p>
+                            <button class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-shopping-cart fa-3x text-gray-300 mb-3"></i>
+                        <p class="text-gray-600">Keranjang Anda kosong</p>
+                        <a href="{{ url_for('customer.produk') }}" class="btn btn-primary">
+                            <i class="fas fa-shopping-bag"></i> Belanja Sekarang
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Ringkasan Belanja -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Ringkasan Belanja</h6>
+            </div>
+            <div class="card-body">
+                {% if keranjang_list %}
+                    {% set total = namespace(value=0) %}
+                    {% for item in keranjang_list %}
+                        {% set total.value = total.value + (item[4] * item[2]) %}
+                    {% endfor %}
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>Rp {{ "{:,.0f}".format(total.value) }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Ongkir</span>
+                        <span class="text-muted">Dihitung di checkout</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Total</strong>
+                        <strong class="text-primary">Rp {{ "{:,.0f}".format(total.value) }}</strong>
+                    </div>
+                    <button class="btn btn-primary btn-block">
+                        <i class="fas fa-shopping-cart"></i> Checkout
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

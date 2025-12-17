@@ -8,7 +8,7 @@
     <ul class="navbar-nav ml-auto">
         <!-- Keranjang Icon -->
         <li class="nav-item dropdown no-arrow mx-1">
-            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button">
+            <a class="nav-link" href="{{ url_for('customer.keranjang') }}" role="button">
                 <i class="fas fa-shopping-cart fa-fw"></i>
                 <span class="badge badge-danger badge-counter">0</span>
             </a>
@@ -24,7 +24,7 @@
                 <img class="img-profile rounded-circle" src="{{ url_for('static', filename='assets_sb_admin/img/undraw_profile.svg') }}">
             </a>
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="{{ url_for('customer.profil') }}">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Profil
                 </a>

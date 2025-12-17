@@ -1,11 +1,121 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends 'customer/layout/base_customer.html' %}
+
+{% block title %}Profil Saya - E-Commerce{% endblock %}
+
+{% block page_heading %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Profil Saya</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4">
+        <!-- Profil Card -->
+        <div class="card shadow mb-4">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <img src="{{ url_for('static', filename='assets_sb_admin/img/undraw_profile.svg') }}" 
+                         class="img-fluid rounded-circle" style="width: 100px;" alt="Profile">
+                </div>
+                {% if user_data %}
+                <h5 class="font-weight-bold">{{ user_data[1] }}</h5>
+                <p class="text-muted">{{ user_data[7].title() if user_data[7] else 'Customer' }}</p>
+                <p><i class="fas fa-envelope"></i> {{ user_data[2] }}</p>
+                <p><i class="fas fa-phone"></i> {{ user_data[3] }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Menu Cepat -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Menu Cepat</h6>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('customer.alamat') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-map-marker-alt"></i> Alamat Saya
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-lock"></i> Ubah Password
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="list-group-item list-group-item-action text-danger">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <!-- Informasi Pribadi -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary">Informasi Pribadi</h6>
+                <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editProfilModal">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+            </div>
+            <div class="card-body">
+                {% if user_data %}
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Nama Lengkap</strong></div>
+                    <div class="col-md-8">{{ user_data[1] }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Email</strong></div>
+                    <div class="col-md-8">{{ user_data[2] }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Nomor Telepon</strong></div>
+                    <div class="col-md-8">{{ user_data[3] }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Tanggal Lahir</strong></div>
+                    <div class="col-md-8">{{ user_data[4].strftime('%d %B %Y') if user_data[4] else '-' }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Jenis Kelamin</strong></div>
+                    <div class="col-md-8">{{ 'Laki-laki' if user_data[5] == 'L' else 'Perempuan' }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Alamat Pengiriman -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary">Alamat Pengiriman</h6>
+                <a href="{{ url_for('customer.alamat') }}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> Tambah Alamat
+                </a>
+            </div>
+            <div class="card-body">
+                {% if alamat_list %}
+                    {% for alamat in alamat_list %}
+                    <div class="border p-3 mb-3 rounded">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p class="mb-1">{{ alamat[1] }}</p>
+                                <p class="text-muted mb-0">
+                                    {{ alamat[3] }}, {{ alamat[2] }}, {{ alamat[4] }} - {{ alamat[5] }}
+                                </p>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center text-muted">Belum ada alamat pengiriman</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
