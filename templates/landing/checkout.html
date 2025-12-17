@@ -87,20 +87,7 @@
           </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-          <form action="">
-            <div class="input-group">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Search for products"
-              />
-              <div class="input-group-append">
-                <span class="input-group-text bg-transparent text-primary">
-                  <i class="fa fa-search"></i>
-                </span>
-              </div>
-            </div>
-          </form>
+          <!-- Search removed for cleaner look -->
         </div>
         <div class="col-lg-3 col-6 text-right">
           {% if session.user_id and session.role == 'customer' %}
@@ -182,7 +169,7 @@
                 href="{{ url_for('landing.index') }}"
                 class="btn btn-outline-primary"
               >
-                <i class="fa fa-arrow-left mr-2"></i>Back to Home
+                <i class="fa fa-arrow-left mr-2"></i>Kembali ke Halaman Belanja
               </a>
             </div>
           </nav>
@@ -197,11 +184,13 @@
         class="d-flex flex-column align-items-center justify-content-center"
         style="min-height: 300px"
       >
-        <h1 class="font-weight-semi-bold text-uppercase mb-3">Checkout</h1>
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Pembayaran</h1>
         <div class="d-inline-flex">
-          <p class="m-0"><a href="{{ url_for('landing.index') }}">Home</a></p>
+          <p class="m-0">
+            <a href="{{ url_for('landing.index') }}">Belanja</a>
+          </p>
           <p class="m-0 px-2">-</p>
-          <p class="m-0">Checkout</p>
+          <p class="m-0">Pembayaran</p>
         </div>
       </div>
     </div>

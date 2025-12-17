@@ -2,10 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>EShopper - Bootstrap Shop Template</title>
+    <title>EShopper - Detail Produk</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <meta content="Free HTML Templates" name="keywords" />
-    <meta content="Free HTML Templates" name="description" />
+    <meta content="Toko Online, Belanja Online" name="keywords" />
+    <meta content="Detail Produk" name="description" />
 
     <!-- Favicon -->
     <link
@@ -37,6 +37,17 @@
       href="{{ url_for('static', filename='assets_landing/css/style.css') }}"
       rel="stylesheet"
     />
+    <style>
+      /* Hide number input spinner arrows for cleaner appearance */
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+    </style>
   </head>
 
   <body>
@@ -45,11 +56,9 @@
       <div class="row bg-secondary py-2 px-xl-5">
         <div class="col-lg-6 d-none d-lg-block">
           <div class="d-inline-flex align-items-center">
-            <a class="text-dark" href="">FAQs</a>
+            <a class="text-dark" href="">Bantuan</a>
             <span class="text-muted px-2">|</span>
-            <a class="text-dark" href="">Help</a>
-            <span class="text-muted px-2">|</span>
-            <a class="text-dark" href="">Support</a>
+            <a class="text-dark" href="">Kontak</a>
           </div>
         </div>
         <div class="col-lg-6 text-center text-lg-right">
@@ -83,20 +92,7 @@
           </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-          <form action="">
-            <div class="input-group">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Search for products"
-              />
-              <div class="input-group-append">
-                <span class="input-group-text bg-transparent text-primary">
-                  <i class="fa fa-search"></i>
-                </span>
-              </div>
-            </div>
-          </form>
+          <!-- Search removed for cleaner look -->
         </div>
         <div class="col-lg-3 col-6 text-right">
           {% if session.user_id and session.role == 'customer' %}
@@ -177,7 +173,7 @@
                 href="{{ url_for('landing.index') }}"
                 class="btn btn-outline-primary"
               >
-                <i class="fa fa-arrow-left mr-2"></i>Back to Home
+                <i class="fa fa-arrow-left mr-2"></i>Kembali ke Halaman Belanja
               </a>
             </div>
           </nav>
@@ -192,9 +188,11 @@
         class="d-flex flex-column align-items-center justify-content-center"
         style="min-height: 300px"
       >
-        <h1 class="font-weight-semi-bold text-uppercase mb-3">Shop Detail</h1>
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Detail Produk</h1>
         <div class="d-inline-flex">
-          <p class="m-0"><a href="{{ url_for('landing.index') }}">Home</a></p>
+          <p class="m-0">
+            <a href="{{ url_for('landing.index') }}">Belanja</a>
+          </p>
           <p class="m-0 px-2">-</p>
           <p class="m-0">{{ product.nama_barang }}</p>
         </div>
@@ -213,11 +211,15 @@
             class="carousel slide"
             data-ride="carousel"
           >
-            <div class="carousel-inner border">
+            <div class="carousel-inner border" style="height: 500px">
               {% for image in images %}
-              <div class="carousel-item {% if loop.first %}active{% endif %}">
+              <div
+                class="carousel-item {% if loop.first %}active{% endif %}"
+                style="height: 100%"
+              >
                 <img
                   class="w-100 h-100"
+                  style="object-fit: contain"
                   src="{{ url_for('static', filename='gambar_produk/' ~ image.gambar_url) }}"
                   alt="{{ product.nama_barang }}"
                 />
@@ -241,18 +243,38 @@
           </div>
           {% elif images|length == 1 %}
           <!-- Gambar tunggal tanpa carousel -->
-          <div class="border">
+          <div
+            class="border"
+            style="
+              height: 500px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: #f8f9fa;
+            "
+          >
             <img
               class="w-100 h-100"
+              style="object-fit: contain"
               src="{{ url_for('static', filename='gambar_produk/' ~ images[0].gambar_url) }}"
               alt="{{ product.nama_barang }}"
             />
           </div>
           {% else %}
           <!-- Default image jika tidak ada gambar -->
-          <div class="border">
+          <div
+            class="border"
+            style="
+              height: 500px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: #f8f9fa;
+            "
+          >
             <img
               class="w-100 h-100"
+              style="object-fit: contain"
               src="{{ url_for('static', filename='assets_landing/img/product-1.jpg') }}"
               alt="Product Image"
             />
@@ -267,9 +289,7 @@
           </h3>
           <p class="mb-4">{{ product.deskripsi }}</p>
           <div class="d-flex align-items-center mb-3">
-            <p class="text-dark font-weight-medium mb-0 mr-3">
-              Stock Available:
-            </p>
+            <p class="text-dark font-weight-medium mb-0 mr-3">Stok Tersedia:</p>
             <p class="mb-0"><strong>{{ product.stok }}</strong> pcs</p>
           </div>
           <div class="d-flex align-items-center mb-4 pt-2">
@@ -280,12 +300,13 @@
                 </button>
               </div>
               <input
-                type="number"
+                type="text"
                 id="quantity"
                 class="form-control bg-secondary text-center"
                 value="1"
                 min="1"
                 max="{{ product.stok }}"
+                style="-moz-appearance: textfield"
               />
               <div class="input-group-btn">
                 <button class="btn btn-primary btn-plus" type="button">
@@ -299,18 +320,18 @@
               id="btn-add-to-cart"
               data-product-id="{{ product.id }}"
             >
-              <i class="fa fa-shopping-cart mr-1"></i> Add To Cart
+              <i class="fa fa-shopping-cart mr-1"></i> Tambah ke Keranjang
             </button>
             {% else %}
             <a
               href="{{ url_for('auth.login') }}"
               class="btn btn-outline-primary px-3"
-              ><i class="fa fa-shopping-cart mr-1"></i> Login to Buy</a
+              ><i class="fa fa-shopping-cart mr-1"></i> Login untuk Beli</a
             >
             {% endif %}
           </div>
           <div class="d-flex pt-2">
-            <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
+            <p class="text-dark font-weight-medium mb-0 mr-2">Bagikan di:</p>
             <div class="d-inline-flex">
               <a class="text-dark px-2" href="">
                 <i class="fab fa-facebook-f"></i>
@@ -331,7 +352,7 @@
       <div class="row px-xl-5">
         <div class="col">
           <div class="border p-4">
-            <h4 class="mb-3">Product Description</h4>
+            <h4 class="mb-3">Deskripsi Produk</h4>
             <p>{{ product.deskripsi }}</p>
           </div>
         </div>
@@ -340,14 +361,14 @@
     <!-- Shop Detail End -->
 
     <!-- Products Start -->
+    {% if related_products %}
     <div class="container-fluid py-5">
       <div class="text-center mb-4">
         <h2 class="section-title px-5">
-          <span class="px-2">You May Also Like</span>
+          <span class="px-2">Kamu Juga Mungkin Suka</span>
         </h2>
       </div>
       <div class="row px-xl-5">
-        {% if related_products %}
         <div class="col">
           <div class="owl-carousel related-carousel">
             {% for product in related_products %}
@@ -403,22 +424,15 @@
             {% endfor %}
           </div>
         </div>
-        {% else %}
-        <div class="col-12">
-          <div class="alert alert-info text-center">
-            <i class="fas fa-info-circle mr-2"></i>Belum ada produk lain
-            tersedia
-          </div>
-        </div>
-        {% endif %}
       </div>
     </div>
+    {% endif %}
     <!-- Products End -->
 
     <!-- Footer Start -->
     <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
       <div class="row px-xl-5 pt-5">
-        <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+        <div class="col-lg-12 col-md-12 mb-5 text-center">
           <a href="" class="text-decoration-none">
             <h1 class="mb-4 display-5 font-weight-semi-bold">
               <span
@@ -427,10 +441,6 @@
               >Shopper
             </h1>
           </a>
-          <p>
-            Dolore erat dolor sit lorem vero amet. Sed sit lorem magna, ipsum no
-            sit erat lorem et magna ipsum dolore amet erat.
-          </p>
           <p class="mb-2">
             <i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street,
             New York, USA
@@ -442,108 +452,12 @@
             <i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890
           </p>
         </div>
-        <div class="col-lg-8 col-md-12">
-          <div class="row">
-            <div class="col-md-4 mb-5">
-              <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
-              <div class="d-flex flex-column justify-content-start">
-                <a class="text-dark mb-2" href="index.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Home</a
-                >
-                <a class="text-dark mb-2" href="shop.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Our Shop</a
-                >
-                <a class="text-dark mb-2" href="detail.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Shop Detail</a
-                >
-                <a class="text-dark mb-2" href="cart.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a
-                >
-                <a class="text-dark mb-2" href="checkout.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Checkout</a
-                >
-                <a class="text-dark" href="contact.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Contact Us</a
-                >
-              </div>
-            </div>
-            <div class="col-md-4 mb-5">
-              <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
-              <div class="d-flex flex-column justify-content-start">
-                <a class="text-dark mb-2" href="index.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Home</a
-                >
-                <a class="text-dark mb-2" href="shop.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Our Shop</a
-                >
-                <a class="text-dark mb-2" href="detail.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Shop Detail</a
-                >
-                <a class="text-dark mb-2" href="cart.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a
-                >
-                <a class="text-dark mb-2" href="checkout.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Checkout</a
-                >
-                <a class="text-dark" href="contact.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Contact Us</a
-                >
-              </div>
-            </div>
-            <div class="col-md-4 mb-5">
-              <h5 class="font-weight-bold text-dark mb-4">Newsletter</h5>
-              <form action="">
-                <div class="form-group">
-                  <input
-                    type="text"
-                    class="form-control border-0 py-4"
-                    placeholder="Your Name"
-                    required="required"
-                  />
-                </div>
-                <div class="form-group">
-                  <input
-                    type="email"
-                    class="form-control border-0 py-4"
-                    placeholder="Your Email"
-                    required="required"
-                  />
-                </div>
-                <div>
-                  <button
-                    class="btn btn-primary btn-block border-0 py-3"
-                    type="submit"
-                  >
-                    Subscribe Now
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
       </div>
       <div class="row border-top border-light mx-xl-5 py-4">
-        <div class="col-md-6 px-xl-0">
-          <p class="mb-md-0 text-center text-md-left text-dark">
-            &copy;
-            <a class="text-dark font-weight-semi-bold" href="#"
-              >Your Site Name</a
-            >. All Rights Reserved. Designed by
-            <a
-              class="text-dark font-weight-semi-bold"
-              href="https://htmlcodex.com"
-              >HTML Codex</a
-            ><br />
-            Distributed By
-            <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+        <div class="col-12 text-center">
+          <p class="mb-0 text-dark">
+            &copy; Your Site Name. Semua Hak Dilindungi.
           </p>
-        </div>
-        <div class="col-md-6 px-xl-0 text-center text-md-right">
-          <img
-            class="img-fluid"
-            src="{{ url_for('static', filename='assets_landing/img/payments.png') }}"
-            alt=""
-          />
         </div>
       </div>
     </div>
@@ -653,19 +567,19 @@
                           alert(response.message);
 
                           // Reset button
-                          $btn.prop('disabled', false).html('<i class="fa fa-shopping-cart mr-1"></i> Add To Cart');
+                          $btn.prop('disabled', false).html('<i class="fa fa-shopping-cart mr-1"></i> Tambah ke Keranjang');
 
                           // Reset quantity to 1
                           $quantityInput.val(1);
                       } else {
                           alert(response.message);
-                          $btn.prop('disabled', false).html('<i class="fa fa-shopping-cart mr-1"></i> Add To Cart');
+                          $btn.prop('disabled', false).html('<i class="fa fa-shopping-cart mr-1"></i> Tambah ke Keranjang');
                       }
                   },
                   error: function(xhr) {
                       var response = xhr.responseJSON;
                       alert(response ? response.message : 'Terjadi kesalahan saat menambahkan ke keranjang');
-                      $btn.prop('disabled', false).html('<i class="fa fa-shopping-cart mr-1"></i> Add To Cart');
+                      $btn.prop('disabled', false).html('<i class="fa fa-shopping-cart mr-1"></i> Tambah ke Keranjang');
                   }
               });
           });
