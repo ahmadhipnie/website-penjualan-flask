@@ -3,6 +3,9 @@ from model.database import get_db
 from controller.auth.AuthController import auth_bp
 from controller.admin.KategoriController import kategori_bp
 from controller.admin.ProdukController import produk_bp
+from controller.admin.JenisEkspedisiController import jenis_ekspedisi_bp
+from controller.admin.KategoriController import kategori_bp
+from controller.admin.ProdukController import produk_bp
 from controller.customer.DashboardCustomerController import customer_bp
 import os
 
@@ -26,6 +29,9 @@ def close_db(error):
 
 # Register Blueprints
 app.register_blueprint(auth_bp, url_prefix='/auth')
+app.register_blueprint(kategori_bp)
+app.register_blueprint(produk_bp)
+app.register_blueprint(jenis_ekspedisi_bp)
 app.register_blueprint(kategori_bp)
 app.register_blueprint(produk_bp)
 app.register_blueprint(customer_bp, url_prefix='/customer')
