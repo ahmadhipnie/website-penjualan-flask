@@ -27,16 +27,16 @@
             <span>Kategori</span>
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="fas fa-fw fa-shopping-cart"></i>
-            <span>Transaksi</span>
+    <li class="nav-item {{ 'active' if request.endpoint == 'jenis_ekspedisi.index' }}">
+        <a class="nav-link" href="{{ url_for('jenis_ekspedisi.index') }}">
+            <i class="fas fa-fw fa-truck"></i>
+            <span>Jenis Ekspedisi</span>
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="#">
-            <i class="fas fa-fw fa-users"></i>
-            <span>User</span>
+            <i class="fas fa-fw fa-shopping-cart"></i>
+            <span>Transaksi</span>
         </a>
     </li>
     <li class="nav-item">
