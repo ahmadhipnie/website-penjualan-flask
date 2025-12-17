@@ -17,27 +17,36 @@ def index():
     cursor.execute("SELECT * FROM kategoris ORDER BY nama_kategori ASC")
     kategoris = cursor.fetchall()
     
-    # Ambil produk dengan filter kategori jika ada
+    # Ambil parameter filter
     kategori_id = request.args.get('kategori', type=int)
+    search_query = request.args.get('search', '').strip()
+    
+    # Build query berdasarkan filter
+    query = """
+        SELECT b.*, k.nama_kategori, gb.gambar_url
+        FROM barangs b 
+        LEFT JOIN kategoris k ON b.id_kategori = k.id 
+        LEFT JOIN gambar_barangs gb ON b.id = gb.id_barang AND gb.is_primary = 1
+        WHERE b.stok > 0
+    """
+    params = []
     
     if kategori_id:
-        cursor.execute("""
-            SELECT b.*, k.nama_kategori, gb.gambar_url
-            FROM barangs b 
-            LEFT JOIN kategoris k ON b.id_kategori = k.id 
-            LEFT JOIN gambar_barangs gb ON b.id = gb.id_barang AND gb.is_primary = 1
-            WHERE b.id_kategori = %s AND b.stok > 0
-            ORDER BY b.created_at DESC
-        """, (kategori_id,))
+        query += " AND b.id_kategori = %s"
+        params.append(kategori_id)
+    
+    if search_query:
+        query += " AND (b.nama_barang LIKE %s OR b.deskripsi LIKE %s)"
+        search_param = f"%{search_query}%"
+        params.append(search_param)
+        params.append(search_param)
+    
+    query += " ORDER BY b.created_at DESC"
+    
+    if params:
+        cursor.execute(query, tuple(params))
     else:
-        cursor.execute("""
-            SELECT b.*, k.nama_kategori, gb.gambar_url
-            FROM barangs b 
-            LEFT JOIN kategoris k ON b.id_kategori = k.id 
-            LEFT JOIN gambar_barangs gb ON b.id = gb.id_barang AND gb.is_primary = 1
-            WHERE b.stok > 0
-            ORDER BY b.created_at DESC
-        """)
+        cursor.execute(query)
     
     products = cursor.fetchall()
     
