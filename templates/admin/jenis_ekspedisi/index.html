@@ -1,0 +1,278 @@
+{% extends 'admin/layout/base_admin.html' %}
+
+{% block title %}Kelola Jenis Ekspedisi - Admin{% endblock %}
+
+{% block page_heading %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Kelola Jenis Ekspedisi</h1>
+    <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#modalTambah">
+        <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Jenis Ekspedisi
+    </button>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Daftar Jenis Ekspedisi</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="5%">No</th>
+                        <th>Nama Ekspedisi</th>
+                        <th>Tanggal Dibuat</th>
+                        <th width="15%">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ekspedisi in ekspedisis %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ ekspedisi.nama_ekspedisi }}</td>
+                        <td>{{ ekspedisi.created_at.strftime('%d-%m-%Y %H:%M') if ekspedisi.created_at else '-' }}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm btn-edit" 
+                                    data-id="{{ ekspedisi.id }}"
+                                    data-nama="{{ ekspedisi.nama_ekspedisi }}">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-danger btn-sm btn-delete" 
+                                    data-id="{{ ekspedisi.id }}" 
+                                    data-nama="{{ ekspedisi.nama_ekspedisi }}">
+                                <i class="fas fa-trash"></i> Hapus
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tambah -->
+<div class="modal fade" id="modalTambah" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Jenis Ekspedisi</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form id="formTambah">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nama_ekspedisi_tambah">Nama Ekspedisi <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="nama_ekspedisi_tambah" name="nama_ekspedisi" required>
+                        <small class="form-text text-muted">Contoh: JNE Trucking, TIKI Cargo, dll.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit -->
+<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Jenis Ekspedisi</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form id="formEdit">
+                <input type="hidden" id="edit_id" name="id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nama_ekspedisi_edit">Nama Ekspedisi <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="nama_ekspedisi_edit" name="nama_ekspedisi" required>
+                        <small class="form-text text-muted">Contoh: JNE Trucking, TIKI Cargo, dll.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link href="{{ url_for('static', filename='assets_sb_admin/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+<style>
+    .btn-sm {
+        margin: 2px;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='assets_sb_admin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets_sb_admin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+$(document).ready(function() {
+    // Initialize DataTable
+    $('#dataTable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
+        },
+        "order": [[0, "asc"]]
+    });
+
+    // Form Tambah Jenis Ekspedisi
+    $('#formTambah').submit(function(e) {
+        e.preventDefault();
+        
+        var formData = $(this).serialize();
+        var submitBtn = $(this).find('button[type="submit"]');
+        submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
+        
+        $.ajax({
+            url: "{{ url_for('jenis_ekspedisi.store') }}",
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                $('#modalTambah').modal('hide');
+                $('#formTambah')[0].reset();
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: response.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(function() {
+                    location.reload();
+                });
+            },
+            error: function(xhr) {
+                var message = xhr.responseJSON && xhr.responseJSON.message 
+                    ? xhr.responseJSON.message 
+                    : 'Terjadi kesalahan saat menambahkan jenis ekspedisi';
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: message
+                });
+            },
+            complete: function() {
+                submitBtn.prop('disabled', false).html('Simpan');
+            }
+        });
+    });
+
+    // Button Edit - Load Data
+    $('.btn-edit').click(function() {
+        var id = $(this).data('id');
+        var nama = $(this).data('nama');
+        
+        $('#edit_id').val(id);
+        $('#nama_ekspedisi_edit').val(nama);
+        $('#modalEdit').modal('show');
+    });
+
+    // Form Edit Jenis Ekspedisi
+    $('#formEdit').submit(function(e) {
+        e.preventDefault();
+        
+        var id = $('#edit_id').val();
+        var formData = $(this).serialize();
+        var submitBtn = $(this).find('button[type="submit"]');
+        submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Mengupdate...');
+        
+        $.ajax({
+            url: "{{ url_for('jenis_ekspedisi.update', id=0) }}".replace('0', id),
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                $('#modalEdit').modal('hide');
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: response.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(function() {
+                    location.reload();
+                });
+            },
+            error: function(xhr) {
+                var message = xhr.responseJSON && xhr.responseJSON.message 
+                    ? xhr.responseJSON.message 
+                    : 'Terjadi kesalahan saat mengupdate jenis ekspedisi';
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: message
+                });
+            },
+            complete: function() {
+                submitBtn.prop('disabled', false).html('Update');
+            }
+        });
+    });
+
+    // Button Delete
+    $('.btn-delete').click(function() {
+        var id = $(this).data('id');
+        var nama = $(this).data('nama');
+        
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Jenis ekspedisi '" + nama + "' akan dihapus!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{ url_for('jenis_ekspedisi.delete', id=0) }}".replace('0', id),
+                    type: 'POST',
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Terhapus!',
+                            text: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(function() {
+                            location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        var message = xhr.responseJSON && xhr.responseJSON.message 
+                            ? xhr.responseJSON.message 
+                            : 'Terjadi kesalahan saat menghapus jenis ekspedisi';
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: message
+                        });
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
