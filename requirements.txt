@@ -1,0 +1,5 @@
+# Requirements untuk Flask E-Commerce
+Flask==3.0.0
+Flask-MySQLdb==2.0.0
+mysqlclient==2.2.0
+Werkzeug==3.0.1
