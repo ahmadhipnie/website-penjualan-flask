@@ -45,11 +45,9 @@
       <div class="row bg-secondary py-2 px-xl-5">
         <div class="col-lg-6 d-none d-lg-block">
           <div class="d-inline-flex align-items-center">
-            <a class="text-dark" href="">FAQs</a>
+            <a class="text-dark" href="">Bantuan</a>
             <span class="text-muted px-2">|</span>
-            <a class="text-dark" href="">Help</a>
-            <span class="text-muted px-2">|</span>
-            <a class="text-dark" href="">Support</a>
+            <a class="text-dark" href="">Kontak</a>
           </div>
         </div>
         <div class="col-lg-6 text-center text-lg-right">
@@ -83,17 +81,19 @@
           </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-          <form action="">
+          <form action="{{ url_for('landing.index') }}" method="GET">
             <div class="input-group">
               <input
                 type="text"
+                name="search"
                 class="form-control"
-                placeholder="Search for products"
+                placeholder="Cari produk..."
+                value="{{ request.args.get('search', '') }}"
               />
               <div class="input-group-append">
-                <span class="input-group-text bg-transparent text-primary">
+                <button class="btn bg-transparent text-primary" type="submit">
                   <i class="fa fa-search"></i>
-                </span>
+                </button>
               </div>
             </div>
           </form>
@@ -154,93 +154,23 @@
     <div class="container-fluid mb-5">
       <div class="row border-top px-xl-5">
         <div class="col-lg-12">
-          <nav
-            class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0"
-          >
-            <a href="" class="text-decoration-none d-block d-lg-none">
-              <h1 class="m-0 display-5 font-weight-semi-bold">
-                <span class="text-primary font-weight-bold border px-3 mr-1"
-                  >E</span
-                >Shopper
-              </h1>
-            </a>
-            <button
-              type="button"
-              class="navbar-toggler"
-              data-toggle="collapse"
-              data-target="#navbarCollapse"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div
-              class="collapse navbar-collapse justify-content-between"
-              id="navbarCollapse"
-            >
-              <div class="navbar-nav mr-auto py-0">
-                <a href="index.html" class="nav-item nav-link active">Home</a>
-                <a href="shop.html" class="nav-item nav-link">Shop</a>
-                <a href="detail.html" class="nav-item nav-link">Shop Detail</a>
-                <div class="nav-item dropdown">
-                  <a
-                    href="#"
-                    class="nav-link dropdown-toggle"
-                    data-toggle="dropdown"
-                    >Pages</a
-                  >
-                  <div class="dropdown-menu rounded-0 m-0">
-                    <a href="cart.html" class="dropdown-item">Shopping Cart</a>
-                    <a href="checkout.html" class="dropdown-item">Checkout</a>
-                  </div>
-                </div>
-                <a href="contact.html" class="nav-item nav-link">Contact</a>
-              </div>
-            </div>
-          </nav>
           <div id="header-carousel" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
               <div class="carousel-item active" style="height: 410px">
                 <img
-                  class="img-fluid"
+                  class="img-fluid w-100 h-100"
+                  style="object-fit: cover"
                   src="{{ url_for('static', filename='assets_landing/img/carousel-1.jpg') }}"
                   alt="Image"
                 />
-                <div
-                  class="carousel-caption d-flex flex-column align-items-center justify-content-center"
-                >
-                  <div class="p-3" style="max-width: 700px">
-                    <h4
-                      class="text-light text-uppercase font-weight-medium mb-3"
-                    >
-                      10% Off Your First Order
-                    </h4>
-                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">
-                      Fashionable Dress
-                    </h3>
-                    <a href="" class="btn btn-light py-2 px-3">Shop Now</a>
-                  </div>
-                </div>
               </div>
               <div class="carousel-item" style="height: 410px">
                 <img
-                  class="img-fluid"
+                  class="img-fluid w-100 h-100"
+                  style="object-fit: cover"
                   src="{{ url_for('static', filename='assets_landing/img/carousel-2.jpg') }}"
                   alt="Image"
                 />
-                <div
-                  class="carousel-caption d-flex flex-column align-items-center justify-content-center"
-                >
-                  <div class="p-3" style="max-width: 700px">
-                    <h4
-                      class="text-light text-uppercase font-weight-medium mb-3"
-                    >
-                      10% Off Your First Order
-                    </h4>
-                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">
-                      Reasonable Price
-                    </h3>
-                    <a href="" class="btn btn-light py-2 px-3">Shop Now</a>
-                  </div>
-                </div>
               </div>
             </div>
             <a
@@ -276,7 +206,7 @@
             style="padding: 30px"
           >
             <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
-            <h5 class="font-weight-semi-bold m-0">Quality Product</h5>
+            <h5 class="font-weight-semi-bold m-0">Kualitas Produk</h5>
           </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
@@ -285,7 +215,7 @@
             style="padding: 30px"
           >
             <h1 class="fa fa-shipping-fast text-primary m-0 mr-2"></h1>
-            <h5 class="font-weight-semi-bold m-0">Free Shipping</h5>
+            <h5 class="font-weight-semi-bold m-0">Pengiriman Gratis</h5>
           </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
@@ -294,7 +224,7 @@
             style="padding: 30px"
           >
             <h1 class="fas fa-exchange-alt text-primary m-0 mr-3"></h1>
-            <h5 class="font-weight-semi-bold m-0">14-Day Return</h5>
+            <h5 class="font-weight-semi-bold m-0">Pengembalian 14 Hari</h5>
           </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
@@ -303,7 +233,7 @@
             style="padding: 30px"
           >
             <h1 class="fa fa-phone-volume text-primary m-0 mr-3"></h1>
-            <h5 class="font-weight-semi-bold m-0">24/7 Support</h5>
+            <h5 class="font-weight-semi-bold m-0">Dukungan 24/7</h5>
           </div>
         </div>
       </div>
@@ -311,13 +241,15 @@
     <!-- Featured End -->
 
     <!-- Products with Categories Sidebar Start -->
-    <div class="container-fluid pt-5">
+    <div class="container-fluid pt-5" id="products">
       <div class="row px-xl-5">
         <!-- Shop Sidebar Start (Categories) -->
         <div class="col-lg-3 col-md-12">
           <!-- Price Start -->
           <div class="border-bottom mb-4 pb-4">
-            <h5 class="font-weight-semi-bold mb-4">Filter by Categories</h5>
+            <h5 class="font-weight-semi-bold mb-4">
+              Filter berdasarkan Kategori
+            </h5>
             <div
               class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
             >
@@ -325,7 +257,7 @@
                 href="{{ url_for('landing.index') }}"
                 class="text-dark {% if not selected_kategori %}font-weight-bold{% endif %}"
               >
-                All Categories
+                Semua Kategori
               </a>
             </div>
             {% for kategori in kategoris %}
@@ -353,30 +285,33 @@
                 class="d-flex align-items-center justify-content-between mb-4"
               >
                 <h5 class="text-dark mb-0 ml-2">
-                  {% if selected_kategori %} Products in {% for kategori in
+                  {% if selected_kategori %} Produk di {% for kategori in
                   kategoris %} {% if kategori.id == selected_kategori %} {{
                   kategori.nama_kategori|title }} {% endif %} {% endfor %} {%
-                  else %} All Products {% endif %}
+                  else %} Semua Produk {% endif %}
                 </h5>
               </div>
             </div>
 
             {% if products %} {% for product in products %}
             <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
-              <div class="card product-item border-0 mb-4">
+              <div class="card product-item border-0 mb-4 h-100">
                 <div
                   class="card-header product-img position-relative overflow-hidden bg-transparent border p-0"
+                  style="height: 300px"
                 >
                   {% if product.gambar_url %}
                   <img
-                    class="img-fluid w-100"
+                    class="img-fluid w-100 h-100"
+                    style="object-fit: cover"
                     src="{{ url_for('static', filename='gambar_produk/' ~ product.gambar_url) }}"
                     alt="{{ product.nama_barang }}"
-                    onerror="this.src='{{ url_for('static', filename='assets_landing/img/product-1.jpg') }}'"
+                    onerror="this.onerror=null; this.src='{{ url_for('static', filename='assets_landing/img/product-1.jpg') }}';"
                   />
                   {% else %}
                   <img
-                    class="img-fluid w-100"
+                    class="img-fluid w-100 h-100"
+                    style="object-fit: cover"
                     src="{{ url_for('static', filename='assets_landing/img/product-1.jpg') }}"
                     alt="{{ product.nama_barang }}"
                   />
@@ -384,6 +319,7 @@
                 </div>
                 <div
                   class="card-body border-left border-right text-center p-0 pt-4 pb-3"
+                  style="min-height: 120px"
                 >
                   <h6 class="text-truncate mb-3">{{ product.nama_barang }}</h6>
                   <div class="d-flex justify-content-center">
@@ -399,18 +335,18 @@
                     href="{{ url_for('landing.detail', id=product.id) }}"
                     class="btn btn-sm text-dark p-0"
                   >
-                    <i class="fas fa-eye text-primary mr-1"></i>View Detail
+                    <i class="fas fa-eye text-primary mr-1"></i>Lihat Detail
                   </a>
 
                   <!-- Add to Cart - Hanya untuk customer yang login -->
                   {% if session.user_id and session.role == 'customer' %}
                   <a
-                    href="#"
-                    class="btn btn-sm text-dark p-0"
-                    onclick="addToCart({{ product.id }})"
+                    href="javascript:void(0)"
+                    class="btn btn-sm text-dark p-0 btn-add-cart"
+                    data-product-id="{{ product.id }}"
                   >
-                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To
-                    Cart
+                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Tambah
+                    ke Keranjang
                   </a>
                   {% else %}
                   <a
@@ -418,7 +354,7 @@
                     class="btn btn-sm text-muted p-0"
                     title="Login sebagai customer untuk belanja"
                   >
-                    <i class="fas fa-shopping-cart mr-1"></i>Login to Buy
+                    <i class="fas fa-shopping-cart mr-1"></i>Login untuk Beli
                   </a>
                   {% endif %}
                 </div>
@@ -438,75 +374,10 @@
     </div>
     <!-- Products with Categories Sidebar End -->
 
-    <!-- Subscribe Start -->
-    <div class="container-fluid bg-secondary my-5">
-      <div class="row justify-content-md-center py-5 px-xl-5">
-        <div class="col-md-6 col-12 py-5">
-          <div class="text-center mb-2 pb-2">
-            <h2 class="section-title px-5 mb-3">
-              <span class="bg-secondary px-2">Stay Updated</span>
-            </h2>
-            <p>
-              Amet lorem at rebum amet dolores. Elitr lorem dolor sed amet diam
-              labore at justo ipsum eirmod duo labore labore.
-            </p>
-          </div>
-          <form action="">
-            <div class="input-group">
-              <input
-                type="text"
-                class="form-control border-white p-4"
-                placeholder="Email Goes Here"
-              />
-              <div class="input-group-append">
-                <button class="btn btn-primary px-4">Subscribe</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    <!-- Subscribe End -->
-
-    <!-- Vendor Start -->
-    <div class="container-fluid py-5">
-      <div class="row px-xl-5">
-        <div class="col">
-          <div class="owl-carousel vendor-carousel">
-            <div class="vendor-item border p-4">
-              <img src="img/vendor-1.jpg" alt="" />
-            </div>
-            <div class="vendor-item border p-4">
-              <img src="img/vendor-2.jpg" alt="" />
-            </div>
-            <div class="vendor-item border p-4">
-              <img src="img/vendor-3.jpg" alt="" />
-            </div>
-            <div class="vendor-item border p-4">
-              <img src="img/vendor-4.jpg" alt="" />
-            </div>
-            <div class="vendor-item border p-4">
-              <img src="img/vendor-5.jpg" alt="" />
-            </div>
-            <div class="vendor-item border p-4">
-              <img src="img/vendor-6.jpg" alt="" />
-            </div>
-            <div class="vendor-item border p-4">
-              <img src="img/vendor-7.jpg" alt="" />
-            </div>
-            <div class="vendor-item border p-4">
-              <img src="img/vendor-8.jpg" alt="" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Vendor End -->
-
     <!-- Footer Start -->
     <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
       <div class="row px-xl-5 pt-5">
-        <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+        <div class="col-lg-12 col-md-12 mb-5 text-center">
           <a href="" class="text-decoration-none">
             <h1 class="mb-4 display-5 font-weight-semi-bold">
               <span
@@ -515,10 +386,6 @@
               >Shopper
             </h1>
           </a>
-          <p>
-            Dolore erat dolor sit lorem vero amet. Sed sit lorem magna, ipsum no
-            sit erat lorem et magna ipsum dolore amet erat.
-          </p>
           <p class="mb-2">
             <i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street,
             New York, USA
@@ -530,104 +397,12 @@
             <i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890
           </p>
         </div>
-        <div class="col-lg-8 col-md-12">
-          <div class="row">
-            <div class="col-md-4 mb-5">
-              <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
-              <div class="d-flex flex-column justify-content-start">
-                <a class="text-dark mb-2" href="index.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Home</a
-                >
-                <a class="text-dark mb-2" href="shop.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Our Shop</a
-                >
-                <a class="text-dark mb-2" href="detail.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Shop Detail</a
-                >
-                <a class="text-dark mb-2" href="cart.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a
-                >
-                <a class="text-dark mb-2" href="checkout.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Checkout</a
-                >
-                <a class="text-dark" href="contact.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Contact Us</a
-                >
-              </div>
-            </div>
-            <div class="col-md-4 mb-5">
-              <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
-              <div class="d-flex flex-column justify-content-start">
-                <a class="text-dark mb-2" href="index.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Home</a
-                >
-                <a class="text-dark mb-2" href="shop.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Our Shop</a
-                >
-                <a class="text-dark mb-2" href="detail.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Shop Detail</a
-                >
-                <a class="text-dark mb-2" href="cart.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a
-                >
-                <a class="text-dark mb-2" href="checkout.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Checkout</a
-                >
-                <a class="text-dark" href="contact.html"
-                  ><i class="fa fa-angle-right mr-2"></i>Contact Us</a
-                >
-              </div>
-            </div>
-            <div class="col-md-4 mb-5">
-              <h5 class="font-weight-bold text-dark mb-4">Newsletter</h5>
-              <form action="">
-                <div class="form-group">
-                  <input
-                    type="text"
-                    class="form-control border-0 py-4"
-                    placeholder="Your Name"
-                    required="required"
-                  />
-                </div>
-                <div class="form-group">
-                  <input
-                    type="email"
-                    class="form-control border-0 py-4"
-                    placeholder="Your Email"
-                    required="required"
-                  />
-                </div>
-                <div>
-                  <button
-                    class="btn btn-primary btn-block border-0 py-3"
-                    type="submit"
-                  >
-                    Subscribe Now
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
       </div>
       <div class="row border-top border-light mx-xl-5 py-4">
-        <div class="col-md-6 px-xl-0">
-          <p class="mb-md-0 text-center text-md-left text-dark">
-            &copy;
-            <a class="text-dark font-weight-semi-bold" href="#"
-              >Your Site Name</a
-            >. All Rights Reserved. Designed by
-            <a
-              class="text-dark font-weight-semi-bold"
-              href="https://htmlcodex.com"
-              >HTML Codex</a
-            ><br />
-            Distributed By
-            <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+        <div class="col-12 text-center">
+          <p class="mb-0 text-dark">
+            &copy; Your Site Name. Semua Hak Dilindungi.
           </p>
-        </div>
-        <div class="col-md-6 px-xl-0 text-center text-md-right">
-          <img class="img-fluid" src="img/payments.png" alt="" />
         </div>
       </div>
     </div>
@@ -650,5 +425,62 @@
 
     <!-- Template Javascript -->
     <script src="{{ url_for('static', filename='assets_landing/js/main.js') }}"></script>
+
+    <script>
+      $(document).ready(function () {
+        // AJAX Add to Cart for all products
+        $(".btn-add-cart").on("click", function (e) {
+          e.preventDefault();
+
+          var productId = $(this).data("product-id");
+          var $btn = $(this);
+          var originalHtml = $btn.html();
+
+          // Disable button to prevent double click
+          $btn
+            .prop("disabled", true)
+            .html('<i class="fa fa-spinner fa-spin mr-1"></i> Menambahkan...');
+
+          $.ajax({
+            url: "/landing/cart/add",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+              id_barang: productId,
+              quantity: 1,
+            }),
+            success: function (response) {
+              if (response.success) {
+                // Update cart badge
+                $("#cart-badge").text(response.cart_count);
+
+                // Show success message
+                alert(response.message);
+
+                // Reset button
+                $btn.prop("disabled", false).html(originalHtml);
+              } else {
+                alert(response.message);
+                $btn.prop("disabled", false).html(originalHtml);
+              }
+            },
+            error: function (xhr) {
+              var response = xhr.responseJSON;
+              alert(
+                response
+                  ? response.message
+                  : "Terjadi kesalahan saat menambahkan ke keranjang"
+              );
+              $btn.prop("disabled", false).html(originalHtml);
+            },
+          });
+        });
+
+        // Load cart count on page load
+        $.get("/landing/cart/count", function (data) {
+          $("#cart-badge").text(data.count);
+        });
+      });
+    </script>
   </body>
 </html>

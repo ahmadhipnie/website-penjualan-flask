@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Shopping Cart - EShopper</title>
+    <title>Keranjang Belanja - EShopper</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
     <!-- Favicon -->
@@ -35,6 +35,17 @@
       href="{{ url_for('static', filename='assets_landing/css/style.css') }}"
       rel="stylesheet"
     />
+    <style>
+      /* Hide number input spinner arrows for cleaner appearance */
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+    </style>
   </head>
 
   <body>
@@ -43,11 +54,9 @@
       <div class="row bg-secondary py-2 px-xl-5">
         <div class="col-lg-6 d-none d-lg-block">
           <div class="d-inline-flex align-items-center">
-            <a class="text-dark" href="">FAQs</a>
+            <a class="text-dark" href="">Bantuan</a>
             <span class="text-muted px-2">|</span>
-            <a class="text-dark" href="">Help</a>
-            <span class="text-muted px-2">|</span>
-            <a class="text-dark" href="">Support</a>
+            <a class="text-dark" href="">Kontak</a>
           </div>
         </div>
         <div class="col-lg-6 text-center text-lg-right">
@@ -81,20 +90,7 @@
           </a>
         </div>
         <div class="col-lg-6 col-6 text-left">
-          <form action="">
-            <div class="input-group">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Search for products"
-              />
-              <div class="input-group-append">
-                <span class="input-group-text bg-transparent text-primary">
-                  <i class="fa fa-search"></i>
-                </span>
-              </div>
-            </div>
-          </form>
+          <!-- Search removed for cleaner look -->
         </div>
         <div class="col-lg-3 col-6 text-right">
           {% if session.user_id and session.role == 'customer' %}
@@ -178,7 +174,7 @@
                 href="{{ url_for('landing.index') }}"
                 class="btn btn-outline-primary"
               >
-                <i class="fa fa-arrow-left mr-2"></i>Back to Home
+                <i class="fa fa-arrow-left mr-2"></i>Kembali ke Halaman Belanja
               </a>
             </div>
           </nav>
@@ -193,11 +189,15 @@
         class="d-flex flex-column align-items-center justify-content-center"
         style="min-height: 300px"
       >
-        <h1 class="font-weight-semi-bold text-uppercase mb-3">Shopping Cart</h1>
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">
+          Keranjang Belanja
+        </h1>
         <div class="d-inline-flex">
-          <p class="m-0"><a href="{{ url_for('landing.index') }}">Home</a></p>
+          <p class="m-0">
+            <a href="{{ url_for('landing.index') }}">Belanja</a>
+          </p>
           <p class="m-0 px-2">-</p>
-          <p class="m-0">Shopping Cart</p>
+          <p class="m-0">Keranjang Belanja</p>
         </div>
       </div>
     </div>
@@ -211,11 +211,11 @@
           <table class="table table-bordered text-center mb-0">
             <thead class="bg-secondary text-dark">
               <tr>
-                <th>Products</th>
-                <th>Price</th>
-                <th>Quantity</th>
+                <th>Produk</th>
+                <th>Harga</th>
+                <th>Jumlah</th>
                 <th>Total</th>
-                <th>Remove</th>
+                <th>Hapus</th>
               </tr>
             </thead>
             <tbody class="align-middle">
@@ -302,7 +302,7 @@
         <div class="col-lg-4">
           <div class="card border-secondary mb-5">
             <div class="card-header bg-secondary border-0">
-              <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+              <h4 class="font-weight-semi-bold m-0">Ringkasan Keranjang</h4>
             </div>
             <div class="card-body">
               <div class="d-flex justify-content-between mb-3 pt-1">
@@ -312,8 +312,8 @@
                 </h6>
               </div>
               <div class="d-flex justify-content-between">
-                <h6 class="font-weight-medium">Shipping</h6>
-                <h6 class="font-weight-medium">Free</h6>
+                <h6 class="font-weight-medium">Pengiriman</h6>
+                <h6 class="font-weight-medium">Gratis</h6>
               </div>
             </div>
             <div class="card-footer border-secondary bg-transparent">
@@ -327,7 +327,7 @@
                 href="{{ url_for('landing.checkout') }}"
                 class="btn btn-block btn-primary my-3 py-3"
               >
-                <i class="fa fa-shopping-cart mr-2"></i>Proceed To Checkout
+                <i class="fa fa-shopping-cart mr-2"></i>Lanjut ke Pembayaran
               </a>
             </div>
           </div>
