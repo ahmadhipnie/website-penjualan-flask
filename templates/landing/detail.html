@@ -120,7 +120,10 @@
               >
                 <i class="fas fa-tachometer-alt mr-2"></i>Dashboard Customer
               </a>
-              <a class="dropdown-item" href="{{ url_for('customer.keranjang') }}">
+              <a
+                class="dropdown-item"
+                href="{{ url_for('customer.keranjang') }}"
+              >
                 <i class="fas fa-shopping-bag mr-2"></i>Lihat Keranjang Saya
               </a>
               <div class="dropdown-divider"></div>
@@ -372,19 +375,22 @@
         <div class="col">
           <div class="owl-carousel related-carousel">
             {% for product in related_products %}
-            <div class="card product-item border-0">
+            <div class="card product-item border-0 h-100">
               <div
                 class="card-header product-img position-relative overflow-hidden bg-transparent border p-0"
+                style="height: 250px"
               >
                 {% if product.gambar_url %}
                 <img
-                  class="img-fluid w-100"
+                  class="img-fluid w-100 h-100"
+                  style="object-fit: cover"
                   src="{{ url_for('static', filename='gambar_produk/' ~ product.gambar_url) }}"
                   alt="{{ product.nama_barang }}"
                 />
                 {% else %}
                 <img
-                  class="img-fluid w-100"
+                  class="img-fluid w-100 h-100"
+                  style="object-fit: cover"
                   src="{{ url_for('static', filename='assets_landing/img/product-1.jpg') }}"
                   alt="{{ product.nama_barang }}"
                 />
@@ -392,8 +398,26 @@
               </div>
               <div
                 class="card-body border-left border-right text-center p-0 pt-4 pb-3"
+                style="
+                  height: 120px;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: space-between;
+                "
               >
-                <h6 class="text-truncate mb-3">{{ product.nama_barang }}</h6>
+                <h6
+                  class="mb-2"
+                  style="
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    line-height: 1.4;
+                  "
+                >
+                  {{ product.nama_barang }}
+                </h6>
                 <div class="d-flex justify-content-center">
                   <h6>Rp {{ "{:,.0f}".format(product.harga) }}</h6>
                 </div>
@@ -407,7 +431,10 @@
                   ><i class="fas fa-eye text-primary mr-1"></i>View Detail</a
                 >
                 {% if session.user_id and session.role == 'customer' %}
-                <a href="" class="btn btn-sm text-dark p-0"
+                <a
+                  href="javascript:void(0)"
+                  class="btn btn-sm text-dark p-0 btn-add-cart-related"
+                  data-product-id="{{ product.id }}"
                   ><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To
                   Cart</a
                 >
@@ -489,8 +516,13 @@
           var $btnMinus = $('.btn-minus');
           var $btnPlus = $('.btn-plus');
 
+          // Unbind event dari main.js untuk mencegah double trigger
+          $('.quantity button').off('click');
+
           // Handle minus button
-          $btnMinus.on('click', function() {
+          $btnMinus.on('click', function(e) {
+              e.preventDefault();
+              e.stopImmediatePropagation();
               var currentVal = parseInt($quantityInput.val()) || 1;
               if (currentVal > 1) {
                   $quantityInput.val(currentVal - 1);
@@ -498,7 +530,9 @@
           });
 
           // Handle plus button with strict validation
-          $btnPlus.on('click', function() {
+          $btnPlus.on('click', function(e) {
+              e.preventDefault();
+              e.stopImmediatePropagation();
               var currentVal = parseInt($quantityInput.val()) || 1;
               if (currentVal < maxStock) {
                   $quantityInput.val(currentVal + 1);
@@ -587,6 +621,48 @@
           // Load cart count on page load
           $.get('/landing/cart/count', function(data) {
               $('#cart-badge').text(data.count);
+          });
+
+          // AJAX Add to Cart for related products (Kamu Juga Mungkin Suka)
+          $('.btn-add-cart-related').on('click', function(e) {
+              e.preventDefault();
+
+              var productId = $(this).data('product-id');
+              var $btn = $(this);
+              var originalHtml = $btn.html();
+
+              // Disable button to prevent double click
+              $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin mr-1"></i> Menambahkan...');
+
+              $.ajax({
+                  url: '/landing/cart/add',
+                  method: 'POST',
+                  contentType: 'application/json',
+                  data: JSON.stringify({
+                      id_barang: productId,
+                      quantity: 1
+                  }),
+                  success: function(response) {
+                      if (response.success) {
+                          // Update cart badge
+                          $('#cart-badge').text(response.cart_count);
+
+                          // Show success message
+                          alert(response.message);
+
+                          // Reset button
+                          $btn.prop('disabled', false).html(originalHtml);
+                      } else {
+                          alert(response.message);
+                          $btn.prop('disabled', false).html(originalHtml);
+                      }
+                  },
+                  error: function(xhr) {
+                      var response = xhr.responseJSON;
+                      alert(response ? response.message : 'Terjadi kesalahan saat menambahkan ke keranjang');
+                      $btn.prop('disabled', false).html(originalHtml);
+                  }
+              });
           });
       });
     </script>

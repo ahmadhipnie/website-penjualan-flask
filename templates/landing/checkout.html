@@ -115,7 +115,10 @@
               >
                 <i class="fas fa-tachometer-alt mr-2"></i>Dashboard Customer
               </a>
-              <a class="dropdown-item" href="{{ url_for('customer.keranjang') }}">
+              <a
+                class="dropdown-item"
+                href="{{ url_for('customer.keranjang') }}"
+              >
                 <i class="fas fa-shopping-bag mr-2"></i>Lihat Keranjang Saya
               </a>
               <div class="dropdown-divider"></div>
@@ -442,14 +445,9 @@
                 snap.pay(response.snap_token, {
                   onSuccess: function (result) {
                     console.log("Payment success result:", result);
+                    // Baru save transaksi ke database ketika payment sukses
                     finishPayment();
                     alert("Pembayaran berhasil! Terima kasih");
-                    window.location.href = '{{ url_for("landing.index") }}';
-                  },
-                  onPending: function (result) {
-                    console.log("Payment pending:", result);
-                    // Don't finish payment for pending status
-                    alert("Menunggu pembayaran Anda");
                     window.location.href = '{{ url_for("landing.index") }}';
                   },
                   onError: function (result) {
@@ -462,7 +460,8 @@
                     alert("Pembayaran gagal: " + result.status_message);
                   },
                   onClose: function () {
-                    console.log("Payment popup closed");
+                    // User batal/close popup - tidak save apa-apa ke database
+                    console.log("Payment popup closed - no action taken");
                     $btn
                       .prop("disabled", false)
                       .html(
