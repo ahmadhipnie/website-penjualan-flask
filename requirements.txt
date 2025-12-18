@@ -18,6 +18,10 @@ mysqlclient>=2.2.0
 # Utilities
 python-dotenv>=1.0.0
 
+# Export & Reports
+xlsxwriter>=3.1.0        # Excel export
+fpdf>=1.7.2              # PDF export
+
 # ===================================================================
 # CATATAN INSTALASI:
 # ===================================================================

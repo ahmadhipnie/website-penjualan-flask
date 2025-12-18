@@ -39,8 +39,8 @@
             <span>Transaksi</span>
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">
+    <li class="nav-item {{ 'active' if request.endpoint in ['laporan.index'] }}">
+        <a class="nav-link" href="{{ url_for('laporan.index') }}">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Laporan</span>
         </a>

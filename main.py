@@ -7,6 +7,7 @@ from controller.landing.LandingController import landing_bp
 from controller.admin.JenisEkspedisiController import jenis_ekspedisi_bp
 from controller.customer.DashboardCustomerController import customer_bp
 from controller.admin.TransaksiController import transaksi_bp
+from controller.admin.LaporanController import laporan_bp
 import os
 
 app = Flask(__name__)
@@ -35,6 +36,7 @@ app.register_blueprint(landing_bp, url_prefix='/landing')
 app.register_blueprint(jenis_ekspedisi_bp)
 app.register_blueprint(customer_bp, url_prefix='/customer')
 app.register_blueprint(transaksi_bp)
+app.register_blueprint(laporan_bp)
 
 # Route halaman utama
 @app.route('/')

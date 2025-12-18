@@ -4,15 +4,43 @@ Website e-commerce menggunakan Flask dan MySQL dengan template SB Admin 2. Proje
 
 ## ✨ Fitur
 
-- ✅ Sistem Authentication (Login & Register)
-- ✅ Dashboard Admin & Customer
-- ✅ Template Layout System (Reusable Components)
-- ✅ Role-based Access Control
-- ✅ Flash Messages & Session Management
-- 🔄 Manajemen Produk (In Progress)
+### 🔐 Authentication & Authorization
+- ✅ Sistem Login & Register
+- ✅ Role-based Access Control (Admin & Customer)
+- ✅ Session Management
+- ✅ Flash Messages
+
+### 👨‍💼 Admin Panel
+- ✅ Dashboard Admin
+- ✅ **Manajemen Produk** (CRUD dengan upload multiple gambar)
+- ✅ **Manajemen Kategori** (CRUD)
+- ✅ **Manajemen Jenis Ekspedisi** (CRUD)
+- ✅ **Manajemen Transaksi** (Lihat, Detail, Update Status)
+  - Update status: Diproses → Dikirim (dengan input ekspedisi & resi)
+  - Update status: Dikirim → Sampai (dengan upload bukti foto)
+  - Update status sederhana (Selesai, Dibatalkan)
+- ✅ **Laporan Transaksi**
+  - Filter berdasarkan status
+  - Filter berdasarkan range tanggal
+  - Export ke Excel (.xlsx)
+  - Export ke PDF
+  - Summary per status
+  - Total transaksi & pendapatan
+
+### 👤 Customer Panel
+- ✅ Dashboard Customer
+- ✅ Landing Page dengan katalog produk
+- ✅ Lihat detail produk
 - 🔄 Keranjang Belanja (In Progress)
 - 🔄 Checkout & Pembayaran (In Progress)
 - 🔄 Tracking Pesanan (In Progress)
+
+### 🎨 UI/UX
+- ✅ Template Layout System (Modular & Reusable)
+- ✅ Responsive Design (Bootstrap 4)
+- ✅ SB Admin 2 Theme
+- ✅ DataTables untuk tabel interaktif
+- ✅ Font Awesome Icons
 
 ## 🚀 Instalasi
 
@@ -155,12 +183,27 @@ Gunakan akun berikut untuk testing:
 ├── penjualan_flask.sql        # Database schema
 │
 ├── controller/                 # Controllers
-│   └── auth/
-│       └── AuthController.py   # Login, Register, Logout
+│   ├── auth/
+│   │   └── AuthController.py   # Login, Register, Logout
+│   ├── admin/
+│   │   ├── KategoriController.py
+│   │   ├── ProdukController.py
+│   │   ├── JenisEkspedisiController.py
+│   │   ├── TransaksiController.py
+│   │   └── LaporanController.py
+│   ├── customer/
+│   │   └── DashboardCustomerController.py
+│   └── landing/
+│       └── LandingController.py
 │
 ├── model/                      # Models
+│   ├── database.py            # Database connection helper
 │   ├── User.py                # User CRUD operations
-│   └── database.py            # Database connection helper
+│   ├── Kategori.py            # Kategori model
+│   ├── Produk.py              # Produk model
+│   ├── JenisEkspedisi.py      # Jenis Ekspedisi model
+│   ├── Transaksi.py           # Transaksi model
+│   └── Laporan.py             # Laporan model
 │
 ├── templates/                  # HTML Templates
 │   ├── auth/                  # Authentication pages
@@ -175,26 +218,41 @@ Gunakan akun berikut untuk testing:
 │   │   │   └── footer_admin.html
 │   │   ├── dashboard/
 │   │   │   └── index.html
-│   │   └── produk/
-│   │       └── index.html     # Example page
+│   │   ├── kategori/
+│   │   │   └── index.html
+│   │   ├── produk/
+│   │   │   ├── index.html
+│   │   │   ├── tambah.html
+│   │   │   └── edit.html
+│   │   ├── jenis_ekspedisi/
+│   │   │   └── index.html
+│   │   ├── transaksi/
+│   │   │   ├── index.html
+│   │   │   ├── detail.html
+│   │   │   ├── kirim.html
+│   │   │   └── sampai.html
+│   │   └── laporan/
+│   │       └── index.html
 │   │
-│   └── customer/              # Customer section
-│       ├── layout/            # Reusable components
-│       │   ├── base_customer.html
-│       │   ├── sidebar_customer.html
-│       │   ├── topbar_customer.html
-│       │   └── footer_customer.html
-│       ├── dashboard/
-│       │   └── index.html
-│       └── produk/
-│           └── index.html     # Example page
+│   ├── customer/              # Customer section
+│   │   ├── layout/            # Reusable components
+│   │   ├── dashboard/
+│   │   └── ...
+│   │
+│   └── landing/               # Landing pages
+│       ├── index.html
+│       ├── detail.html
+│       └── ...
 │
 ├── static/                     # Static files
-│   └── assets_sb_admin/       # SB Admin 2 theme
-│       ├── css/
-│       ├── js/
-│       ├── img/
-│       └── vendor/
+│   ├── assets_sb_admin/       # SB Admin 2 theme
+│   │   ├── css/
+│   │   ├── js/
+│   │   ├── img/
+│   │   └── vendor/
+│   ├── assets_landing/        # Landing page assets
+│   ├── gambar_produk/         # Upload folder - product images
+│   └── gambar_bukti_sampai/   # Upload folder - delivery proof
 │
 └── docs/                       # Documentation
     └── TEMPLATE_LAYOUT_GUIDE.md   # Template system guide
@@ -231,8 +289,10 @@ Dokumentasi lengkap: [TEMPLATE_LAYOUT_GUIDE.md](TEMPLATE_LAYOUT_GUIDE.md)
 - **Backend:** Flask 2.3+ (Python Web Framework)
 - **Database:** MySQL 8.0+ dengan MySQLdb connector
 - **Frontend:** Bootstrap 4 (SB Admin 2 Template)
-- **JavaScript:** jQuery 3.x
+- **JavaScript:** jQuery 3.x, DataTables
 - **Icons:** Font Awesome 5
+- **Export:** XlsxWriter (Excel), FPDF (PDF)
+- **File Upload:** Werkzeug secure_filename
 
 ## 🔧 Troubleshooting
 
