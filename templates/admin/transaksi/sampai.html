@@ -1,0 +1,154 @@
+{% extends 'admin/layout/base_admin.html' %}
+
+{% block title %}Konfirmasi Sampai - Admin Panel{% endblock %}
+
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Konfirmasi Sampai</h1>
+    <a href="{{ url_for('transaksi.detail', id=transaksi.id) }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Kembali
+    </a>
+</div>
+
+<!-- Content Row -->
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Upload Bukti Sampai - {{ transaksi.kode_transaksi }}</h6>
+            </div>
+            <div class="card-body">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Info Customer -->
+                <div class="mb-4 p-3 bg-light border rounded">
+                    <h6 class="font-weight-bold">Informasi Customer:</h6>
+                    <p class="mb-1"><strong>Nama:</strong> {{ transaksi.nama_customer }}</p>
+                    <p class="mb-1"><strong>Email:</strong> {{ transaksi.email }}</p>
+                    <p class="mb-1"><strong>No. Telepon:</strong> {{ transaksi.nomor_telepon }}</p>
+                    <p class="mb-0"><strong>Alamat:</strong> {{ transaksi.alamat_pengiriman }}</p>
+                </div>
+
+                <!-- Info Pengiriman -->
+                <div class="mb-4 p-3 bg-info text-white border rounded">
+                    <h6 class="font-weight-bold">Informasi Pengiriman:</h6>
+                    <p class="mb-1"><strong>Ekspedisi:</strong> {{ transaksi.nama_ekspedisi }}</p>
+                    <p class="mb-1"><strong>Nomor Resi:</strong> {{ transaksi.nomor_resi }}</p>
+                    <p class="mb-0"><strong>Prakiraan Sampai:</strong> {{ transaksi.prakiraan_tanggal_sampai.strftime('%d-%m-%Y') if transaksi.prakiraan_tanggal_sampai else '-' }}</p>
+                </div>
+
+                <!-- Form -->
+                <form method="POST" action="{{ url_for('transaksi.sampai', id=transaksi.id) }}" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="gambar_bukti_sampai">Gambar Bukti Sampai <span class="text-danger">*</span></label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="gambar_bukti_sampai" 
+                                   name="gambar_bukti_sampai" accept="image/*" required onchange="previewImage(this)">
+                            <label class="custom-file-label" for="gambar_bukti_sampai">Pilih gambar...</label>
+                        </div>
+                        <small class="form-text text-muted">
+                            Upload foto bukti bahwa paket sudah sampai (Format: JPG, PNG, JPEG, GIF | Max: 5MB)
+                        </small>
+                    </div>
+
+                    <!-- Preview Image -->
+                    <div class="form-group" id="preview-container" style="display: none;">
+                        <label>Preview Gambar:</label>
+                        <div>
+                            <img id="preview-image" src="" alt="Preview" class="img-fluid border" style="max-width: 400px;">
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        <strong>Perhatian:</strong> Pastikan gambar bukti sampai jelas dan menunjukkan bahwa paket telah diterima oleh customer.
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check-circle"></i> Konfirmasi Sampai
+                        </button>
+                        <a href="{{ url_for('transaksi.detail', id=transaksi.id) }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Transaksi -->
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Detail Transaksi</h6>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <tr>
+                        <th>Kode Transaksi</th>
+                        <td>{{ transaksi.kode_transaksi }}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Harga</th>
+                        <td><strong>Rp {{ "{:,.0f}".format(transaksi.total_harga).replace(',', '.') }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td><span class="badge badge-primary">Dikirim</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="card shadow mb-4 border-left-success">
+            <div class="card-body">
+                <h6 class="font-weight-bold text-success">Tips Upload Bukti:</h6>
+                <ul class="small mb-0">
+                    <li>Pastikan gambar tidak blur</li>
+                    <li>Foto menunjukkan paket yang diterima</li>
+                    <li>Bisa berupa foto customer menerima paket</li>
+                    <li>Atau foto paket sudah di lokasi customer</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Update file input label
+    $('.custom-file-input').on('change', function() {
+        var fileName = $(this).val().split('\\').pop();
+        $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
+    });
+
+    // Preview image
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+                $('#preview-image').attr('src', e.target.result);
+                $('#preview-container').show();
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+{% endblock %}

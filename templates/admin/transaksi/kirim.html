@@ -1,0 +1,118 @@
+{% extends 'admin/layout/base_admin.html' %}
+
+{% block title %}Kirim Pesanan - Admin Panel{% endblock %}
+
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Kirim Pesanan</h1>
+    <a href="{{ url_for('transaksi.detail', id=transaksi.id) }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Kembali
+    </a>
+</div>
+
+<!-- Content Row -->
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Form Pengiriman - {{ transaksi.kode_transaksi }}</h6>
+            </div>
+            <div class="card-body">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Info Customer -->
+                <div class="mb-4 p-3 bg-light border rounded">
+                    <h6 class="font-weight-bold">Informasi Customer:</h6>
+                    <p class="mb-1"><strong>Nama:</strong> {{ transaksi.nama_customer }}</p>
+                    <p class="mb-1"><strong>Email:</strong> {{ transaksi.email }}</p>
+                    <p class="mb-1"><strong>No. Telepon:</strong> {{ transaksi.nomor_telepon }}</p>
+                    <p class="mb-0"><strong>Alamat:</strong> {{ transaksi.alamat_pengiriman }}</p>
+                </div>
+
+                <!-- Form -->
+                <form method="POST" action="{{ url_for('transaksi.kirim', id=transaksi.id) }}">
+                    <div class="form-group">
+                        <label for="id_jenis_ekspedisi">Jenis Ekspedisi <span class="text-danger">*</span></label>
+                        <select class="form-control" id="id_jenis_ekspedisi" name="id_jenis_ekspedisi" required>
+                            <option value="">-- Pilih Jenis Ekspedisi --</option>
+                            {% for ekspedisi in jenis_ekspedisis %}
+                                <option value="{{ ekspedisi.id }}">{{ ekspedisi.nama_ekspedisi }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nomor_resi">Nomor Resi <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="nomor_resi" name="nomor_resi" 
+                               placeholder="Masukkan nomor resi pengiriman" required>
+                        <small class="form-text text-muted">Masukkan nomor resi yang diberikan oleh ekspedisi</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prakiraan_tanggal_sampai">Prakiraan Tanggal Sampai <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="prakiraan_tanggal_sampai" 
+                               name="prakiraan_tanggal_sampai" required>
+                        <small class="form-text text-muted">Estimasi tanggal paket akan sampai ke customer</small>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-shipping-fast"></i> Kirim Pesanan
+                        </button>
+                        <a href="{{ url_for('transaksi.detail', id=transaksi.id) }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Transaksi -->
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Detail Transaksi</h6>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <tr>
+                        <th>Kode Transaksi</th>
+                        <td>{{ transaksi.kode_transaksi }}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Harga</th>
+                        <td><strong>Rp {{ "{:,.0f}".format(transaksi.total_harga).replace(',', '.') }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td><span class="badge badge-info">Sedang Diproses</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Set minimum date to today
+    document.addEventListener('DOMContentLoaded', function() {
+        var today = new Date().toISOString().split('T')[0];
+        document.getElementById('prakiraan_tanggal_sampai').setAttribute('min', today);
+    });
+</script>
+{% endblock %}

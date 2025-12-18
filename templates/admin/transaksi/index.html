@@ -1,11 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends 'admin/layout/base_admin.html' %}
+
+{% block title %}Daftar Transaksi - Admin Panel{% endblock %}
+
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Daftar Transaksi</h1>
+</div>
+
+<!-- Content Row -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Data Transaksi</h6>
+            </div>
+            <div class="card-body">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kode Transaksi</th>
+                                <th>Customer</th>
+                                <th>Total Harga</th>
+                                <th>Status</th>
+                                <th>Tanggal Order</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaksi in transaksis %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ transaksi.kode_transaksi }}</td>
+                                <td>
+                                    <strong>{{ transaksi.nama_customer }}</strong><br>
+                                    <small>{{ transaksi.email }}</small>
+                                </td>
+                                <td>Rp {{ "{:,.0f}".format(transaksi.total_harga).replace(',', '.') }}</td>
+                                <td>
+                                    {% if transaksi.status == 'menunggu_pembayaran' %}
+                                        <span class="badge badge-warning">Menunggu Pembayaran</span>
+                                    {% elif transaksi.status == 'sedang_diproses' %}
+                                        <span class="badge badge-info">Sedang Diproses</span>
+                                    {% elif transaksi.status == 'dikirim' %}
+                                        <span class="badge badge-primary">Dikirim</span>
+                                    {% elif transaksi.status == 'sampai' %}
+                                        <span class="badge badge-success">Sampai</span>
+                                    {% elif transaksi.status == 'selesai' %}
+                                        <span class="badge badge-secondary">Selesai</span>
+                                    {% elif transaksi.status == 'dibatalkan' %}
+                                        <span class="badge badge-danger">Dibatalkan</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ transaksi.created_at.strftime('%d-%m-%Y %H:%M') }}</td>
+                                <td>
+                                    <a href="{{ url_for('transaksi.detail', id=transaksi.id) }}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-eye"></i> Detail
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
+            }
+        });
+    });
+</script>
+{% endblock %}
