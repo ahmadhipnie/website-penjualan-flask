@@ -17,7 +17,7 @@
     <div class="col-lg-6">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Informasi Transaksi</h6>
+                <h6 class="m-0 font-weight-bold" style="color: #57726E;">Informasi Transaksi</h6>
             </div>
             <div class="card-body">
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -130,7 +130,7 @@
     <div class="col-lg-6">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Informasi Customer</h6>
+                <h6 class="m-0 font-weight-bold" style="color: #57726E;">Informasi Customer</h6>
             </div>
             <div class="card-body">
                 <table class="table table-sm">
@@ -161,7 +161,7 @@
     <div class="col-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Detail Produk</h6>
+                <h6 class="m-0 font-weight-bold" style="color: #57726E;">Detail Produk</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -206,4 +206,40 @@
         </div>
     </div>
 </div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Omorfo Brand Colors */
+    .btn-primary {
+        background-color: #57726E !important;
+        border-color: #57726E !important;
+    }
+    
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active {
+        background-color: #4a615d !important;
+        border-color: #4a615d !important;
+    }
+    
+    .btn-info {
+        background-color: #A2B1AE !important;
+        border-color: #A2B1AE !important;
+    }
+    
+    .btn-info:hover {
+        background-color: #8fa19d !important;
+        border-color: #8fa19d !important;
+    }
+    
+    .badge-primary {
+        background-color: #57726E !important;
+    }
+    
+    .badge-info {
+        background-color: #A2B1AE !important;
+    }
+</style>
 {% endblock %}

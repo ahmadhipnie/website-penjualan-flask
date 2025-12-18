@@ -19,7 +19,7 @@
     <div class="col-lg-8">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Informasi Produk</h6>
+                <h6 class="m-0 font-weight-bold" style="color: #57726E;">Informasi Produk</h6>
             </div>
             <div class="card-body">
                 <form method="POST" enctype="multipart/form-data" id="formProduk">
@@ -87,7 +87,7 @@
 
                     <hr>
 
-                    <h6 class="font-weight-bold text-primary">Gambar Produk Saat Ini</h6>
+                    <h6 class="font-weight-bold" style="color: #57726E;">Gambar Produk Saat Ini</h6>
                     
                     {% if images %}
                     <div class="row mb-3">
@@ -146,7 +146,7 @@
                     <hr>
 
                     <div class="form-group">
-                        <button type="submit" class="btn btn-warning">
+                        <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save"></i> Update Produk
                         </button>
                         <a href="{{ url_for('produk.index') }}" class="btn btn-secondary">
@@ -161,7 +161,7 @@
     <div class="col-lg-4">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-info">
+                <h6 class="m-0 font-weight-bold" style="color: #57726E;">
                     <i class="fas fa-info-circle"></i> Informasi
                 </h6>
             </div>
@@ -202,6 +202,33 @@
         position: absolute;
         top: 5px;
         left: 5px;
+    }
+    
+    /* Omorfo brand colors */
+    .btn-primary {
+        background-color: #57726E !important;
+        border-color: #57726E !important;
+    }
+    .btn-primary:hover {
+        background-color: #4a615d !important;
+        border-color: #4a615d !important;
+    }
+    .btn-outline-primary {
+        color: #57726E !important;
+        border-color: #57726E !important;
+    }
+    .btn-outline-primary:hover {
+        background-color: #57726E !important;
+        border-color: #57726E !important;
+        color: #fff !important;
+    }
+    .badge-primary {
+        background-color: #57726E !important;
+    }
+    .alert-info {
+        background-color: #E4ECEB !important;
+        color: #57726E !important;
+        border-color: rgba(87, 114, 110, 0.1) !important;
     }
 </style>
 {% endblock %}
@@ -256,7 +283,7 @@ $(document).on('click', '.btn-delete-image', function() {
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
+        cancelButtonColor: '#57726E',
         confirmButtonText: 'Ya, Hapus!',
         cancelButtonText: 'Batal'
     }).then((result) => {
@@ -303,6 +330,7 @@ $(document).on('click', '.btn-set-primary', function() {
                 icon: 'success',
                 title: 'Berhasil!',
                 text: response.message,
+                confirmButtonColor: '#57726E',
                 showConfirmButton: false,
                 timer: 1500
             }).then(function() {
@@ -313,7 +341,8 @@ $(document).on('click', '.btn-set-primary', function() {
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal!',
-                text: xhr.responseJSON?.message || 'Gagal set gambar utama'
+                text: xhr.responseJSON?.message || 'Gagal set gambar utama',
+                confirmButtonColor: '#57726E'
             });
         }
     });

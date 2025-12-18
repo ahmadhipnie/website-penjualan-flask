@@ -115,6 +115,37 @@
     .btn-sm {
         margin: 2px;
     }
+    :root{
+        --admin-primary: #57726E;
+        --admin-primary-hover: #47665F;
+        --admin-secondary: #E4ECEB;
+        --admin-tertiary: #2B1AEE;
+    }
+
+    /* Header title */
+    .card-header h6.text-primary { color: var(--admin-primary) !important; }
+
+    /* Add button */
+    .btn-primary {
+        background-color: var(--admin-primary) !important;
+        border-color: var(--admin-primary) !important;
+        color: #fff !important;
+    }
+    .btn-primary:hover {
+        background-color: var(--admin-primary-hover) !important;
+        border-color: var(--admin-primary-hover) !important;
+        color: #fff !important;
+    }
+
+    /* Small buttons in table */
+    .btn-warning { background-color: #f6c23e !important; border-color: #f6c23e !important; }
+    .btn-danger { background-color: #e74a3b !important; border-color: #e74a3b !important; }
+
+    /* Data Badges (if any) */
+    .badge-info { background-color: var(--admin-primary) !important; color: #fff !important; }
+
+    /* Modal primary buttons */
+    .modal .btn-primary { background-color: var(--admin-primary) !important; border-color: var(--admin-primary) !important; }
 </style>
 {% endblock %}
 

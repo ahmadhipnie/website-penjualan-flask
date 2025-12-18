@@ -6,7 +6,53 @@
     <title>{% block title %}Admin - E-Commerce{% endblock %}</title>
     <link href="{{ url_for('static', filename='assets_sb_admin/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='assets_sb_admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
-    {% block extra_css %}{% endblock %}
+    {% block extra_css %}
+<style>
+    :root {
+        --primary-color: #57726E;
+        --secondary-color: #E4ECEB;
+        --tertiary-color: #2B1AEE;
+    }
+    /* Sidebar */
+    .bg-gradient-primary {
+        background-color: var(--primary-color) !important;
+        background-image: none !important;
+    }
+    .sidebar .nav-item.active .nav-link,
+    .sidebar .nav-link,
+    .sidebar .sidebar-brand {
+        color: #fff !important;
+    }
+    .sidebar .nav-link i {
+        color: var(--tertiary-color) !important;
+    }
+    .sidebar .sidebar-heading {
+        color: var(--secondary-color) !important;
+    }
+    /* Topbar */
+    .navbar, .topbar {
+        background-color: var(--secondary-color) !important;
+        color: var(--primary-color) !important;
+    }
+    /* Footer */
+    .sticky-footer {
+        background-color: var(--secondary-color) !important;
+        color: var(--primary-color) !important;
+    }
+    /* Button & Badge */
+    .btn-primary, .badge-primary {
+        background-color: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+    }
+    .btn-primary:hover {
+        background-color: #405954 !important;
+        border-color: #405954 !important;
+    }
+
+    
+    
+</style>
+{% endblock %}
 </head>
 <body id="page-top">
     <div id="wrapper">

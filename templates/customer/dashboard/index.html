@@ -4,13 +4,42 @@
 
 {% block extra_css %}
 <style>
-    .hover-shadow {
+    /* Dashboard theme variables - apply only inside .dashboard-theme */
+    .dashboard-theme {
+        --primary-color: #57726E;
+        --secondary-color: #E4ECEB;
+        /* Tertiary color seems malformed - please confirm the hex, placeholder used */
+        --tertiary-color: #2B1AEE; /* placeholder, please confirm */
+    }
+
+    .dashboard-theme .hover-shadow {
         transition: all 0.3s ease;
     }
-    .hover-shadow:hover {
+    .dashboard-theme .hover-shadow:hover {
         transform: translateY(-5px);
         box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2) !important;
     }
+
+    /* Override primary/secondary colors locally */
+    .dashboard-theme .text-primary { color: var(--primary-color) !important; }
+    .dashboard-theme .border-left-primary { border-left: .25rem solid var(--primary-color) !important; }
+    .dashboard-theme .card.border-left-primary .card-body { }
+
+    .dashboard-theme .btn-primary {
+        background-color: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+    }
+
+    .dashboard-theme .badge-primary {
+        background-color: var(--primary-color) !important;
+        color: #fff !important;
+    }
+
+    .dashboard-theme .bg-secondary {
+        background-color: var(--secondary-color) !important;
+        color: #000 !important;
+    }
+
     a.text-decoration-none:hover {
         text-decoration: none;
     }
@@ -24,6 +53,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="dashboard-theme">
 <!-- Content Row -->
 <div class="row">
     <div class="col-xl-3 col-md-6 mb-4">
@@ -116,5 +146,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

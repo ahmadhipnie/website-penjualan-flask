@@ -18,7 +18,7 @@
 <!-- DataTables Card -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Daftar Kategori</h6>
+        <h6 class="m-0 font-weight-bold" style="color: #57726E;">Daftar Kategori</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -132,6 +132,56 @@
     .btn-sm {
         margin: 2px;
     }
+    
+    /* Omorfo Brand Colors */
+    :root {
+        --admin-primary: #57726E;
+        --admin-primary-hover: #4a615d;
+    }
+    
+    /* Primary Button Styles */
+    .btn-primary {
+        background-color: #57726E !important;
+        border-color: #57726E !important;
+        color: #fff !important;
+    }
+    
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active {
+        background-color: #4a615d !important;
+        border-color: #4a615d !important;
+        color: #fff !important;
+    }
+    
+    /* Button Icon Split */
+    .btn-icon-split.btn-primary {
+        background-color: #57726E !important;
+        border-color: #57726E !important;
+        color: #fff !important;
+    }
+    
+    .btn-icon-split.btn-primary .icon {
+        background: rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .btn-icon-split.btn-primary:hover {
+        background-color: #4a615d !important;
+        border-color: #4a615d !important;
+    }
+    
+    /* Badge Styles */
+    .badge-info {
+        background-color: #57726E !important;
+        color: #fff !important;
+    }
+    
+    /* Table Header */
+    #dataTable thead th {
+        background-color: #f8f9fc;
+        color: #5a5c69;
+        border-color: #e3e6f0;
+    }
 </style>
 {% endblock %}
 
@@ -169,6 +219,7 @@ $(document).ready(function() {
                     icon: 'success',
                     title: 'Berhasil!',
                     text: response.message,
+                    confirmButtonColor: '#57726E',
                     showConfirmButton: false,
                     timer: 1500
                 }).then(function() {
@@ -183,7 +234,8 @@ $(document).ready(function() {
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal!',
-                    text: message
+                    text: message,
+                    confirmButtonColor: '#57726E'
                 });
             },
             complete: function() {
@@ -222,6 +274,7 @@ $(document).ready(function() {
                     icon: 'success',
                     title: 'Berhasil!',
                     text: response.message,
+                    confirmButtonColor: '#57726E',
                     showConfirmButton: false,
                     timer: 1500
                 }).then(function() {
@@ -236,7 +289,8 @@ $(document).ready(function() {
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal!',
-                    text: message
+                    text: message,
+                    confirmButtonColor: '#57726E'
                 });
             },
             complete: function() {
@@ -256,7 +310,7 @@ $(document).ready(function() {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
+            cancelButtonColor: '#57726E',
             confirmButtonText: 'Ya, Hapus!',
             cancelButtonText: 'Batal'
         }).then((result) => {
@@ -269,6 +323,7 @@ $(document).ready(function() {
                             icon: 'success',
                             title: 'Terhapus!',
                             text: response.message,
+                            confirmButtonColor: '#57726E',
                             showConfirmButton: false,
                             timer: 1500
                         }).then(function() {
@@ -285,7 +340,8 @@ $(document).ready(function() {
                         Swal.fire({
                             icon: 'error',
                             title: 'Gagal!',
-                            text: message
+                            text: message,
+                            confirmButtonColor: '#57726E'
                         });
                     }
                 });

@@ -6,6 +6,64 @@
     <title>{% block title %}Customer - E-Commerce{% endblock %}</title>
     <link href="{{ url_for('static', filename='assets_sb_admin/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='assets_sb_admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <style>
+        /* Customer theme variables (global for customer layout) */
+        :root {
+            --primary-color: #57726E;
+            --secondary-color: #E4ECEB;
+            --tertiary-color: #2B1AEE; /* provisional tertiary color */
+            --primary-contrast: #ffffff;
+        }
+
+        /* Sidebar overrides */
+        .sidebar.bg-gradient-primary {
+            background-color: var(--primary-color) !important;
+            background-image: none !important;
+        }
+        .sidebar .sidebar-brand-text, .sidebar .nav-link, .sidebar .nav-item .nav-link .fas {
+            color: var(--primary-contrast) !important;
+        }
+        .sidebar .nav-link .fas { opacity: 0.95; }
+        .sidebar .nav-item.active .nav-link, .sidebar .nav-link:hover {
+            background-color: rgba(255,255,255,0.06) !important;
+            color: var(--primary-contrast) !important;
+        }
+        /* border-left primary used in dashboard cards */
+        .border-left-primary { border-left: .25rem solid var(--primary-color) !important; }
+
+        /* Topbar overrides */
+        .topbar {
+            background-color: var(--secondary-color) !important;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+        .topbar .nav-link {
+            color: var(--primary-color) !important;
+        }
+        /* Back button on topbar */
+        .topbar-back-btn {
+            color: var(--primary-color) !important;
+            font-weight: 500;
+        }
+        .topbar-back-btn .fas {
+            color: var(--primary-color) !important;
+        }
+        .topbar-back-btn:hover {
+            color: rgba(0,0,0,0.75) !important;
+        }
+
+        /* Badge / counter */
+        .badge-counter, .badge-danger.badge-counter {
+            background-color: var(--tertiary-color) !important;
+            color: #fff !important;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+        }
+
+    </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body id="page-top">

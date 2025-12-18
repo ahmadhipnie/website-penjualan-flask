@@ -2,6 +2,30 @@
 
 {% block title %}Keranjang - E-Commerce{% endblock %}
 
+{% block extra_css %}
+<style>
+    .keranjang-theme {
+        --primary-color: var(--primary-color);
+        --secondary-color: var(--secondary-color);
+        --tertiary-color: var(--tertiary-color);
+    }
+
+    .keranjang-theme .text-primary { color: var(--primary-color) !important; }
+    .keranjang-theme .btn-primary {
+        background-color: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+    }
+    .keranjang-theme h1, .keranjang-theme .card-title { color: var(--primary-color) !important; }
+    .keranjang-theme .badge-info {
+        background-color: var(--primary-color) !important;
+        color: #fff !important;
+    }
+    .keranjang-theme .card { border-color: rgba(0,0,0,0.04); }
+    .keranjang-theme .card .card-img-top { border-bottom: 1px solid rgba(0,0,0,0.03); }
+
+</style>
+{% endblock %}
+
 {% block page_heading %}
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Keranjang</h1>
@@ -9,6 +33,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="keranjang-theme">
 <!-- Filter & Search -->
 <div class="card shadow mb-4">
     <div class="card-body">
@@ -90,6 +115,7 @@
             </div>
         </div>
     {% endif %}
+</div>
 </div>
 
 {% endblock %}
