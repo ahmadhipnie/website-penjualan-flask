@@ -2,6 +2,121 @@
 
 {% block title %}Pesanan Saya - E-Commerce{% endblock %}
 
+{% block extra_css %}
+<style>
+    .pesanan-theme {
+        --primary-color: #57726E;
+        --secondary-color: #E4ECEB;
+        --tertiary-color: #A2B1AE;
+    }
+
+    .pesanan-theme .text-primary { color: var(--primary-color) !important; }
+    
+    .pesanan-theme .badge-primary, .pesanan-theme .badge-info {
+        background-color: var(--primary-color) !important;
+        color: #fff !important;
+    }
+    
+    .pesanan-theme .badge-success { 
+        background-color: var(--tertiary-color) !important; 
+        color: #fff !important; 
+    }
+    
+    .pesanan-theme .btn-primary { 
+        background-color: var(--primary-color) !important; 
+        border-color: var(--primary-color) !important; 
+    }
+    
+    .pesanan-theme .card { border-color: rgba(0,0,0,0.04); }
+    .pesanan-theme .card-header { background-color: rgba(87,114,110,0.03); }
+    
+    /* Filter Tab Styles - Improved */
+    .pesanan-theme .filter-btn {
+        font-weight: 500;
+        padding: 10px 20px;
+        border-radius: 0;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    /* First button rounded left */
+    .pesanan-theme .filter-btn:first-child {
+        border-top-left-radius: 0.35rem;
+        border-bottom-left-radius: 0.35rem;
+    }
+    
+    /* Last button rounded right */
+    .pesanan-theme .filter-btn:last-child {
+        border-top-right-radius: 0.35rem;
+        border-bottom-right-radius: 0.35rem;
+    }
+    
+    /* Outline state (not selected) */
+    .pesanan-theme .filter-btn.btn-outline-primary {
+        background-color: #fff !important;
+        border-color: var(--primary-color) !important;
+        color: var(--primary-color) !important;
+    }
+    
+    /* Hover state for outline buttons */
+    .pesanan-theme .filter-btn.btn-outline-primary:hover {
+        background-color: var(--secondary-color) !important;
+        border-color: var(--primary-color) !important;
+        color: var(--primary-color) !important;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(87,114,110,0.15);
+    }
+    
+    /* Selected/Active state */
+    .pesanan-theme .filter-btn.btn-primary {
+        background-color: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+        color: #fff !important;
+        box-shadow: 0 2px 6px rgba(87,114,110,0.3);
+    }
+    
+    /* Hover on selected button */
+    .pesanan-theme .filter-btn.btn-primary:hover {
+        background-color: #4a615d !important;
+        border-color: #4a615d !important;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(87,114,110,0.4);
+    }
+    
+    /* Badge inside buttons */
+    .pesanan-theme .filter-btn .badge-light {
+        background-color: rgba(255,255,255,0.3);
+        color: inherit;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 12px;
+    }
+    
+    /* Badge on selected button */
+    .pesanan-theme .filter-btn.btn-primary .badge-light {
+        background-color: rgba(255,255,255,0.25);
+        color: #fff;
+    }
+    
+    /* Badge on outline button */
+    .pesanan-theme .filter-btn.btn-outline-primary .badge-light {
+        background-color: var(--secondary-color);
+        color: var(--primary-color);
+    }
+    
+    /* Focus state */
+    .pesanan-theme .filter-btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(87,114,110,0.2);
+    }
+    
+    /* Remove borders between buttons for cleaner look */
+    .pesanan-theme .btn-group .filter-btn + .filter-btn {
+        margin-left: -1px;
+    }
+</style>
+{% endblock %}
+
 {% block page_heading %}
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Pesanan Saya</h1>
@@ -9,114 +124,119 @@
 {% endblock %}
 
 {% block content %}
-<!-- Filter Status -->
-<div class="card shadow mb-4">
-    <div class="card-body">
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-primary filter-btn" data-status="semua" onclick="filterPesanan('semua')">
-                Semua <span class="badge badge-light ml-1" id="count-semua">0</span>
-            </button>
-            
-            <button type="button" class="btn btn-outline-primary filter-btn" data-status="sedang_diproses" onclick="filterPesanan('sedang_diproses')">
-                Diproses <span class="badge badge-light ml-1" id="count-sedang_diproses">0</span>
-            </button>
-            <button type="button" class="btn btn-outline-primary filter-btn" data-status="dikirim" onclick="filterPesanan('dikirim')">
-                Dikirim <span class="badge badge-light ml-1" id="count-dikirim">0</span>
-            </button>
-            <button type="button" class="btn btn-outline-primary filter-btn" data-status="sampai" onclick="filterPesanan('sampai')">
-                Sampai <span class="badge badge-light ml-1" id="count-sampai">0</span>
-            </button>
-            <button type="button" class="btn btn-outline-primary filter-btn" data-status="selesai" onclick="filterPesanan('selesai')">
-                Selesai <span class="badge badge-light ml-1" id="count-selesai">0</span>
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- Daftar Pesanan -->
-<div id="pesananContainer">
-{% if pesanan_list %}
-    {% for pesanan in pesanan_list %}
-    <div class="card shadow mb-4 pesanan-item" data-status="{{ pesanan.status }}">
-        <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <div>
-                <h6 class="m-0 font-weight-bold text-primary">
-                    <i class="fas fa-shopping-bag"></i> {{ pesanan.kode_transaksi }}
-                </h6>
-                <small class="text-muted">{{ pesanan.created_at.strftime('%d %B %Y') if pesanan.created_at else '' }}</small>
-            </div>
-            <span class="badge badge-{{ 'warning' if pesanan.status == 'menunggu_pembayaran' else 'info' if pesanan.status == 'sedang_diproses' else 'primary' if pesanan.status == 'dikirim' else 'success' }} badge-pill">
-                {{ pesanan.status.replace('_', ' ').title() }}
-            </span>
-        </div>
+<div class="pesanan-theme">
+    <!-- Filter Status -->
+    <div class="card shadow mb-4">
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-8">
-                    <p><strong>Alamat Pengiriman:</strong></p>
-                    <p>{{ pesanan.alamat_pengiriman }}</p>
-                    {% if pesanan.nama_ekspedisi %}
-                    <p><strong>Ekspedisi:</strong> {{ pesanan.nama_ekspedisi }}</p>
-                    {% endif %}
-                    {% if pesanan.nomor_resi %}
-                    <p><strong>Nomor Resi:</strong> {{ pesanan.nomor_resi }}</p>
-                    {% endif %}
-
-                    <!-- Daftar item pesanan (tampilkan langsung) -->
-                    {% if pesanan['items'] %}
-                    <hr>
-                    <p class="mb-2"><strong>Items:</strong></p>
-                    <ul class="list-unstyled mb-0">
-                        {% for it in pesanan['items'] %}
-                        <li class="media mb-3">
-                            {% if it.gambar_utama %}
-                            <img src="{{ url_for('static', filename='gambar_produk/' + it.gambar_utama) }}" class="mr-3 rounded" alt="{{ it.nama_barang }}" style="width:60px; height:60px; object-fit:cover;">
-                            {% else %}
-                            <img src="{{ url_for('static', filename='assets_landing/img/product-1.jpg') }}" class="mr-3 rounded" alt="{{ it.nama_barang }}" style="width:60px; height:60px; object-fit:cover;">
-                            {% endif %}
-                            <div class="media-body">
-                                <h6 class="mt-0 mb-1">{{ it.nama_barang }}</h6>
-                                <small class="text-muted">Qty: {{ it.qty }} &middot; Rp {{ "{:,.0f}".format(it.harga) }} &middot; Subtotal: Rp {{ "{:,.0f}".format(it.subtotal) }}</small>
-                            </div>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                </div>
-                <div class="col-md-4 text-right">
-                    <h5 class="text-primary">Rp {{ "{:,.0f}".format(pesanan.total_harga) }}</h5>
-                    {% if pesanan.status == 'menunggu_pembayaran' %}
-                    <button class="btn btn-sm btn-primary">
-                        <i class="fas fa-credit-card"></i> Bayar
-                    </button>
-                    {% elif pesanan.status == 'sampai' %}
-                    <button class="btn btn-sm btn-success" onclick="konfirmasiTerima({{ pesanan.id }})">
-                        <i class="fas fa-check"></i> Konfirmasi Terima
-                    </button>
-                    {% endif %}
-                 </div>
+            <div class="btn-group w-100" role="group">
+                <button type="button" class="btn btn-primary filter-btn" data-status="semua" onclick="filterPesanan('semua')">
+                    Semua <span class="badge badge-light ml-1" id="count-semua">0</span>
+                </button>
+                
+                <button type="button" class="btn btn-outline-primary filter-btn" data-status="sedang_diproses" onclick="filterPesanan('sedang_diproses')">
+                    Diproses <span class="badge badge-light ml-1" id="count-sedang_diproses">0</span>
+                </button>
+                
+                <button type="button" class="btn btn-outline-primary filter-btn" data-status="dikirim" onclick="filterPesanan('dikirim')">
+                    Dikirim <span class="badge badge-light ml-1" id="count-dikirim">0</span>
+                </button>
+                
+                <button type="button" class="btn btn-outline-primary filter-btn" data-status="sampai" onclick="filterPesanan('sampai')">
+                    Sampai <span class="badge badge-light ml-1" id="count-sampai">0</span>
+                </button>
+                
+                <button type="button" class="btn btn-outline-primary filter-btn" data-status="selesai" onclick="filterPesanan('selesai')">
+                    Selesai <span class="badge badge-light ml-1" id="count-selesai">0</span>
+                </button>
             </div>
         </div>
     </div>
-    {% endfor %}
-{% else %}
-    <div class="card shadow mb-4" id="noPesananMessage">
-        <div class="card-body text-center py-5">
-            <i class="fas fa-box fa-3x text-gray-300 mb-3"></i>
-            <p class="text-gray-600">Belum ada pesanan</p>
-            <a href="{{ url_for('customer.keranjang') }}" class="btn btn-primary">
-                <i class="fas fa-shopping-bag"></i> Belanja Sekarang
-            </a>
+
+    <!-- Daftar Pesanan -->
+    <div id="pesananContainer">
+        {% if pesanan_list %}
+            {% for pesanan in pesanan_list %}
+            <div class="card shadow mb-4 pesanan-item" data-status="{{ pesanan.status }}">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-shopping-bag"></i> {{ pesanan.kode_transaksi }}
+                        </h6>
+                        <small class="text-muted">{{ pesanan.created_at.strftime('%d %B %Y') if pesanan.created_at else '' }}</small>
+                    </div>
+                    <span class="badge badge-{{ 'warning' if pesanan.status == 'menunggu_pembayaran' else 'info' if pesanan.status == 'sedang_diproses' else 'primary' if pesanan.status == 'dikirim' else 'success' }} badge-pill">
+                        {{ pesanan.status.replace('_', ' ').title() }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p><strong>Alamat Pengiriman:</strong></p>
+                            <p>{{ pesanan.alamat_pengiriman }}</p>
+                            {% if pesanan.nama_ekspedisi %}
+                            <p><strong>Ekspedisi:</strong> {{ pesanan.nama_ekspedisi }}</p>
+                            {% endif %}
+                            {% if pesanan.nomor_resi %}
+                            <p><strong>Nomor Resi:</strong> {{ pesanan.nomor_resi }}</p>
+                            {% endif %}
+
+                            <!-- Daftar item pesanan -->
+                            {% if pesanan['items'] %}
+                            <hr>
+                            <p class="mb-2"><strong>Items:</strong></p>
+                            <ul class="list-unstyled mb-0">
+                                {% for it in pesanan['items'] %}
+                                <li class="media mb-3">
+                                    {% if it.gambar_utama %}
+                                    <img src="{{ url_for('static', filename='gambar_produk/' + it.gambar_utama) }}" class="mr-3 rounded" alt="{{ it.nama_barang }}" style="width:60px; height:60px; object-fit:cover;">
+                                    {% else %}
+                                    <img src="{{ url_for('static', filename='assets_landing/img/product-1.jpg') }}" class="mr-3 rounded" alt="{{ it.nama_barang }}" style="width:60px; height:60px; object-fit:cover;">
+                                    {% endif %}
+                                    <div class="media-body">
+                                        <h6 class="mt-0 mb-1">{{ it.nama_barang }}</h6>
+                                        <small class="text-muted">Qty: {{ it.qty }} &middot; Rp {{ "{:,.0f}".format(it.harga) }} &middot; Subtotal: Rp {{ "{:,.0f}".format(it.subtotal) }}</small>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <h5 class="text-primary">Rp {{ "{:,.0f}".format(pesanan.total_harga) }}</h5>
+                            {% if pesanan.status == 'menunggu_pembayaran' %}
+                            <button class="btn btn-sm btn-primary">
+                                <i class="fas fa-credit-card"></i> Bayar
+                            </button>
+                            {% elif pesanan.status == 'sampai' %}
+                            <button class="btn btn-sm btn-success" onclick="konfirmasiTerima({{ pesanan.id }})">
+                                <i class="fas fa-check"></i> Konfirmasi Terima
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="card shadow mb-4" id="noPesananMessage">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-box fa-3x text-gray-300 mb-3"></i>
+                    <p class="text-gray-600">Belum ada pesanan</p>
+                    <a href="{{ url_for('customer.keranjang') }}" class="btn btn-primary">
+                        <i class="fas fa-shopping-bag"></i> Belanja Sekarang
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Empty State untuk filter -->
+        <div class="card shadow mb-4" id="emptyFilterMessage" style="display: none;">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-search fa-3x text-gray-300 mb-3"></i>
+                <p class="text-gray-600">Tidak ada pesanan dengan status ini</p>
+            </div>
         </div>
     </div>
-{% endif %}
-
-<!-- Empty State untuk filter (hidden by default) -->
-<div class="card shadow mb-4" id="emptyFilterMessage" style="display: none;">
-    <div class="card-body text-center py-5">
-        <i class="fas fa-search fa-3x text-gray-300 mb-3"></i>
-        <p class="text-gray-600">Tidak ada pesanan dengan status ini</p>
-    </div>
-</div>
 </div>
 {% endblock %}
 
@@ -139,14 +259,19 @@ $(document).ready(function() {
     window.filterPesanan = function(status) {
         console.log('Filter pesanan:', status);
         
-        // Update tombol active
+        // Update tombol active - reset semua ke outline
         $('.filter-btn').removeClass('btn-primary').addClass('btn-outline-primary');
-        $('.filter-btn[data-status="' + status + '"]').removeClass('btn-outline-primary').addClass('btn-primary');
+        
+        // Set tombol yang dipilih menjadi primary (filled)
+        $('.filter-btn[data-status="' + status + '"]')
+            .removeClass('btn-outline-primary')
+            .addClass('btn-primary');
         
         if (status === 'semua') {
             // Tampilkan semua pesanan
             $('.pesanan-item').show();
             $('#emptyFilterMessage').hide();
+            $('#noPesananMessage').hide();
         } else {
             // Sembunyikan semua pesanan
             $('.pesanan-item').hide();
@@ -164,8 +289,9 @@ $(document).ready(function() {
         }
     }
     
-    // Inisialisasi count
+    // Inisialisasi count dan filter
     updateStatusCount();
+    filterPesanan('semua');
 });
 
 // Function to confirm receipt and call backend
@@ -180,7 +306,6 @@ function konfirmasiTerima(penjualanId) {
         success: function(response) {
             if (response.success) {
                 alert(response.message);
-                // Reload page to update status and counts
                 location.reload();
             } else {
                 alert('Gagal: ' + response.message);
@@ -188,7 +313,9 @@ function konfirmasiTerima(penjualanId) {
         },
         error: function(xhr) {
             var msg = 'Terjadi kesalahan saat mengkonfirmasi';
-            if (xhr && xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+            if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
+                msg = xhr.responseJSON.message;
+            }
             alert(msg);
         }
     });

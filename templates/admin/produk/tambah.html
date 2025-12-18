@@ -19,7 +19,7 @@
     <div class="col-lg-8">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Informasi Produk</h6>
+                <h6 class="m-0 font-weight-bold" style="color: #57726E;">Informasi Produk</h6>
             </div>
             <div class="card-body">
                 <form method="POST" enctype="multipart/form-data" id="formProduk">
@@ -117,7 +117,7 @@
     <div class="col-lg-4">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-info">
+                <h6 class="m-0 font-weight-bold" style="color: #57726E;">
                     <i class="fas fa-info-circle"></i> Informasi
                 </h6>
             </div>
@@ -153,6 +153,19 @@
         position: absolute;
         top: 5px;
         left: 5px;
+    }
+    
+    /* Omorfo brand colors */
+    .btn-primary {
+        background-color: #57726E !important;
+        border-color: #57726E !important;
+    }
+    .btn-primary:hover {
+        background-color: #4a615d !important;
+        border-color: #4a615d !important;
+    }
+    .badge-primary {
+        background-color: #57726E !important;
     }
 </style>
 {% endblock %}

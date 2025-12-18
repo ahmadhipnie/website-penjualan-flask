@@ -16,7 +16,7 @@
     <div class="col-lg-8">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Upload Bukti Sampai - {{ transaksi.kode_transaksi }}</h6>
+                <h6 class="m-0 font-weight-bold" style="color: #57726E;">Upload Bukti Sampai - {{ transaksi.kode_transaksi }}</h6>
             </div>
             <div class="card-body">
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -34,7 +34,7 @@
 
                 <!-- Info Customer -->
                 <div class="mb-4 p-3 bg-light border rounded">
-                    <h6 class="font-weight-bold">Informasi Customer:</h6>
+                    <h6 class="font-weight-bold" style="color: #57726E;">Informasi Customer:</h6>
                     <p class="mb-1"><strong>Nama:</strong> {{ transaksi.nama_customer }}</p>
                     <p class="mb-1"><strong>Email:</strong> {{ transaksi.email }}</p>
                     <p class="mb-1"><strong>No. Telepon:</strong> {{ transaksi.nomor_telepon }}</p>
@@ -42,7 +42,7 @@
                 </div>
 
                 <!-- Info Pengiriman -->
-                <div class="mb-4 p-3 bg-info text-white border rounded">
+                <div class="mb-4 p-3 border rounded" style="background-color: #A2B1AE; color: white;">
                     <h6 class="font-weight-bold">Informasi Pengiriman:</h6>
                     <p class="mb-1"><strong>Ekspedisi:</strong> {{ transaksi.nama_ekspedisi }}</p>
                     <p class="mb-1"><strong>Nomor Resi:</strong> {{ transaksi.nomor_resi }}</p>
@@ -93,7 +93,7 @@
     <div class="col-lg-4">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Detail Transaksi</h6>
+                <h6 class="m-0 font-weight-bold" style="color: #57726E;">Detail Transaksi</h6>
             </div>
             <div class="card-body">
                 <table class="table table-sm">
@@ -127,6 +127,38 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Omorfo Brand Colors */
+    .btn-primary {
+        background-color: #57726E !important;
+        border-color: #57726E !important;
+    }
+    
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active {
+        background-color: #4a615d !important;
+        border-color: #4a615d !important;
+    }
+    
+    .badge-primary {
+        background-color: #57726E !important;
+    }
+    
+    /* Background colors */
+    .bg-light {
+        background-color: #E4ECEB !important;
+    }
+    
+    /* Custom file input focus */
+    .custom-file-input:focus ~ .custom-file-label {
+        border-color: #57726E;
+        box-shadow: 0 0 0 0.2rem rgba(87, 114, 110, 0.25);
+    }
+</style>
 {% endblock %}
 
 {% block extra_js %}

@@ -2,6 +2,22 @@
 
 {% block title %}Keranjang Belanja - E-Commerce{% endblock %}
 
+{% block extra_css %}
+<style>
+    .cart-theme {
+        --primary-color: var(--primary-color);
+        --secondary-color: var(--secondary-color);
+    }
+    .cart-theme .text-primary { color: var(--primary-color) !important; }
+    .cart-theme .btn-primary { background-color: var(--primary-color) !important; border-color: var(--primary-color) !important; }
+    .cart-theme .badge-primary { background-color: var(--primary-color) !important; color: #fff !important; }
+    .cart-theme .card { border-color: rgba(0,0,0,0.04); }
+    .cart-theme .card-header .btn-outline-primary { color: var(--primary-color); border-color: var(--primary-color); }
+    .cart-theme .card-header .btn-outline-primary:hover { background-color: rgba(87,114,110,0.06); }
+    .cart-theme .text-muted { color: rgba(0,0,0,0.5); }
+</style>
+{% endblock %}
+
 {% block page_heading %}
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Keranjang Belanja</h1>
@@ -9,6 +25,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="cart-theme">
 {% if keranjang_items %}
 <div class="row">
     <div class="col-lg-8">
@@ -44,7 +61,7 @@
                     </div>
                     <div class="col-md-2">
                         <div class="text-center">
-                            <span class="badge badge-secondary p-2">Jumlah: {{ item.jumlah }}</span>
+                            <span class="badge badge-primary p-2">Jumlah: {{ item.jumlah }}</span>
                         </div>
                     </div>
                     <div class="col-md-2 text-right">
@@ -112,14 +129,15 @@
     <div class="col-12">
         <div class="card shadow mb-4">
             <div class="card-body text-center py-5">
-                <i class="fas fa-shopping-cart fa-5x text-gray-300 mb-4"></i>
-                <h4 class="text-gray-600 mb-3">Keranjang Belanja Kosong</h4>
-                <p class="text-gray-500 mb-4">Anda belum menambahkan produk ke keranjang</p>
+                <i class="fas fa-shopping-cart fa-5x mb-4" style="color: var(--primary-color);"></i>
+                <h4 class="text-primary mb-3">Keranjang Belanja Kosong</h4>
+                <p class="text-muted mb-4">Anda belum menambahkan produk ke keranjang</p>
             </div>
         </div>
     </div>
 </div>
 {% endif %}
+</div>
 {% endblock %}
 
 {% block extra_js %}
