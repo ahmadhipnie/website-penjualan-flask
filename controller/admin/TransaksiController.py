@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from model.Transaksi import Transaksi
 from model.JenisEkspedisi import JenisEkspedisi
+from model.database import get_db
 from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
@@ -65,7 +66,9 @@ def kirim(id):
             return redirect(url_for('transaksi.kirim', id=id))
     
     # GET request - tampilkan form
-    jenis_ekspedisis = JenisEkspedisi.get_all()
+    db = get_db()
+    jenis_ekspedisi_model = JenisEkspedisi(db)
+    jenis_ekspedisis = jenis_ekspedisi_model.get_all()
     return render_template('admin/transaksi/kirim.html', transaksi=transaksi, jenis_ekspedisis=jenis_ekspedisis, user=session)
 
 @transaksi_bp.route('/sampai/<int:id>', methods=['GET', 'POST'])
