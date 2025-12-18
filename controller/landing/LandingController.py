@@ -379,7 +379,7 @@ def checkout():
 
 @landing_bp.route('/checkout/process', methods=['POST'])
 def checkout_process():
-    """Process checkout dan generate Midtrans Snap Token"""
+    """Process checkout dan generate Midtrans Snap Token (TIDAK save ke database)"""
     if 'user_id' not in session or session.get('role') != 'customer':
         return jsonify({'success': False, 'message': 'Unauthorized'}), 401
     
@@ -472,27 +472,24 @@ def checkout_process():
         snap_data = response.json()
         snap_token = snap_data.get('token')
         
-        # Save to database
-        cursor.execute("""
-            INSERT INTO penjualans 
-            (id_user, id_jenis_ekspedisi, kode_transaksi, snap_token, alamat_pengiriman, 
-             status, total_harga, created_at, updated_at)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, NOW(), NOW())
-        """, (session['user_id'], None, kode_transaksi, snap_token, 
-              alamat_text, 'menunggu_pembayaran', total_harga))
+        # Simpan data checkout ke session (TIDAK save ke database dulu)
+        # Data akan disave ke database hanya jika payment berhasil
+        session['pending_checkout'] = {
+            'kode_transaksi': kode_transaksi,
+            'snap_token': snap_token,
+            'alamat_text': alamat_text,
+            'total_harga': total_harga,
+            'cart_items': [
+                {
+                    'id_barang': item['id_barang'],
+                    'jumlah': item['jumlah'],
+                    'harga': int(item['harga']),
+                    'subtotal': int(item['subtotal'])
+                }
+                for item in cart_items
+            ]
+        }
         
-        penjualan_id = cursor.lastrowid
-        
-        # Save detail penjualan
-        for item in cart_items:
-            cursor.execute("""
-                INSERT INTO detail_penjualans 
-                (id_penjualan, id_produk, qty, harga, subtotal, created_at, updated_at)
-                VALUES (%s, %s, %s, %s, %s, NOW(), NOW())
-            """, (penjualan_id, item['id_barang'], item['jumlah'], 
-                  item['harga'], item['subtotal']))
-        
-        db.commit()
         cursor.close()
         
         return jsonify({
@@ -506,7 +503,10 @@ def checkout_process():
 
 @landing_bp.route('/checkout/finish', methods=['POST'])
 def checkout_finish():
-    """Handle payment finish from frontend (alternative to webhook)"""
+    """Handle payment success - Save transaksi ke database"""
+    if 'user_id' not in session or session.get('role') != 'customer':
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+    
     try:
         data = request.get_json()
         order_id = data.get('order_id')
@@ -517,61 +517,78 @@ def checkout_finish():
             print("[CHECKOUT FINISH] Error: Order ID tidak ditemukan")
             return jsonify({'success': False, 'message': 'Order ID tidak ditemukan'}), 400
         
+        # Get pending checkout data from session
+        pending_checkout = session.get('pending_checkout')
+        
+        if not pending_checkout:
+            print("[CHECKOUT FINISH] Error: Pending checkout tidak ditemukan di session")
+            return jsonify({'success': False, 'message': 'Data checkout tidak ditemukan'}), 400
+        
+        # Validate order_id matches
+        if pending_checkout['kode_transaksi'] != order_id:
+            print(f"[CHECKOUT FINISH] Error: Order ID mismatch. Expected {pending_checkout['kode_transaksi']}, got {order_id}")
+            return jsonify({'success': False, 'message': 'Order ID tidak valid'}), 400
+        
         db = get_db()
         cursor = db.cursor()
         
-        # Get penjualan
-        cursor.execute("""
-            SELECT * FROM penjualans WHERE kode_transaksi = %s
-        """, (order_id,))
-        penjualan = cursor.fetchone()
+        # Check if order already exists (prevent duplicate)
+        cursor.execute("SELECT id FROM penjualans WHERE kode_transaksi = %s", (order_id,))
+        existing = cursor.fetchone()
         
-        if not penjualan:
-            print(f"[CHECKOUT FINISH] Error: Order {order_id} tidak ditemukan di database")
-            return jsonify({'success': False, 'message': 'Order tidak ditemukan'}), 404
-        
-        print(f"[CHECKOUT FINISH] Found order: {penjualan['id']}, current status: {penjualan['status']}")
-        
-        # Check if already processed to prevent duplicate stock reduction
-        if penjualan['status'] == 'sedang_diproses':
-            print("[CHECKOUT FINISH] Order sudah diproses sebelumnya")
+        if existing:
+            print(f"[CHECKOUT FINISH] Order {order_id} sudah ada di database")
+            # Clear session
+            session.pop('pending_checkout', None)
             cursor.close()
             return jsonify({'success': True, 'message': 'Order sudah diproses sebelumnya'}), 200
         
-        # Update status to sedang_diproses
-        cursor.execute("""
-            UPDATE penjualans 
-            SET status = 'sedang_diproses', updated_at = NOW()
-            WHERE id = %s
-        """, (penjualan['id'],))
-        print(f"[CHECKOUT FINISH] Updated status to sedang_diproses")
+        print(f"[CHECKOUT FINISH] Saving new order: {order_id}")
         
-        # Get detail penjualans
+        # Save to database dengan status sedang_diproses
         cursor.execute("""
-            SELECT id_produk, qty FROM detail_penjualans 
-            WHERE id_penjualan = %s
-        """, (penjualan['id'],))
-        details = cursor.fetchall()
+            INSERT INTO penjualans 
+            (id_user, id_jenis_ekspedisi, kode_transaksi, snap_token, alamat_pengiriman, 
+             status, total_harga, created_at, updated_at)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, NOW(), NOW())
+        """, (session['user_id'], None, pending_checkout['kode_transaksi'], 
+              pending_checkout['snap_token'], pending_checkout['alamat_text'], 
+              'sedang_diproses', pending_checkout['total_harga']))
         
-        print(f"[CHECKOUT FINISH] Found {len(details)} items to process")
+        penjualan_id = cursor.lastrowid
+        print(f"[CHECKOUT FINISH] Created penjualan with ID: {penjualan_id}")
+        
+        # Save detail penjualan
+        for item in pending_checkout['cart_items']:
+            cursor.execute("""
+                INSERT INTO detail_penjualans 
+                (id_penjualan, id_produk, qty, harga, subtotal, created_at, updated_at)
+                VALUES (%s, %s, %s, %s, %s, NOW(), NOW())
+            """, (penjualan_id, item['id_barang'], item['jumlah'], 
+                  item['harga'], item['subtotal']))
+        
+        print(f"[CHECKOUT FINISH] Saved {len(pending_checkout['cart_items'])} detail items")
         
         # Update stok
-        for detail in details:
+        for item in pending_checkout['cart_items']:
             cursor.execute("""
                 UPDATE barangs 
                 SET stok = stok - %s 
                 WHERE id = %s
-            """, (detail['qty'], detail['id_produk']))
-            print(f"[CHECKOUT FINISH] Reduced stock for product {detail['id_produk']} by {detail['qty']}")
+            """, (item['jumlah'], item['id_barang']))
+            print(f"[CHECKOUT FINISH] Reduced stock for product {item['id_barang']} by {item['jumlah']}")
         
         # Clear cart
         cursor.execute("""
             DELETE FROM keranjangs WHERE id_user = %s
-        """, (penjualan['id_user'],))
-        print(f"[CHECKOUT FINISH] Cleared cart for user {penjualan['id_user']}")
+        """, (session['user_id'],))
+        print(f"[CHECKOUT FINISH] Cleared cart for user {session['user_id']}")
         
         db.commit()
         cursor.close()
+        
+        # Clear pending checkout from session
+        session.pop('pending_checkout', None)
         
         print("[CHECKOUT FINISH] Success! All changes committed")
         return jsonify({'success': True, 'message': 'Pembayaran berhasil'}), 200
