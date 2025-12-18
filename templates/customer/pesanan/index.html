@@ -25,6 +25,9 @@
             <button type="button" class="btn btn-outline-primary filter-btn" data-status="dikirim" onclick="filterPesanan('dikirim')">
                 Dikirim <span class="badge badge-light ml-1" id="count-dikirim">0</span>
             </button>
+            <button type="button" class="btn btn-outline-primary filter-btn" data-status="sampai" onclick="filterPesanan('sampai')">
+                Sampai <span class="badge badge-light ml-1" id="count-sampai">0</span>
+            </button>
             <button type="button" class="btn btn-outline-primary filter-btn" data-status="selesai" onclick="filterPesanan('selesai')">
                 Selesai <span class="badge badge-light ml-1" id="count-selesai">0</span>
             </button>
@@ -87,12 +90,12 @@
                     <button class="btn btn-sm btn-primary">
                         <i class="fas fa-credit-card"></i> Bayar
                     </button>
-                    {% elif pesanan.status == 'dikirim' %}
-                    <button class="btn btn-sm btn-success">
+                    {% elif pesanan.status == 'sampai' %}
+                    <button class="btn btn-sm btn-success" onclick="konfirmasiTerima({{ pesanan.id }})">
                         <i class="fas fa-check"></i> Konfirmasi Terima
                     </button>
                     {% endif %}
-                </div>
+                 </div>
             </div>
         </div>
     </div>
@@ -127,7 +130,7 @@ $(document).ready(function() {
         var totalCount = $('.pesanan-item').length;
         $('#count-semua').text(totalCount);
         
-        var statuses = ['menunggu_pembayaran', 'sedang_diproses', 'dikirim', 'selesai'];
+        var statuses = ['menunggu_pembayaran', 'sedang_diproses', 'dikirim', 'sampai', 'selesai'];
         statuses.forEach(function(status) {
             var count = $('.pesanan-item[data-status="' + status + '"]').length;
             $('#count-' + status).text(count);
@@ -166,5 +169,31 @@ $(document).ready(function() {
     // Inisialisasi count
     updateStatusCount();
 });
+
+// Function to confirm receipt and call backend
+function konfirmasiTerima(penjualanId) {
+    if (!confirm('Konfirmasi penerimaan barang?\nAnda akan menandai pesanan ini sebagai selesai.')) {
+        return;
+    }
+
+    $.ajax({
+        url: '/customer/pesanan/konfirmasi/' + penjualanId,
+        method: 'POST',
+        success: function(response) {
+            if (response.success) {
+                alert(response.message);
+                // Reload page to update status and counts
+                location.reload();
+            } else {
+                alert('Gagal: ' + response.message);
+            }
+        },
+        error: function(xhr) {
+            var msg = 'Terjadi kesalahan saat mengkonfirmasi';
+            if (xhr && xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+            alert(msg);
+        }
+    });
+}
 </script>
 {% endblock %}

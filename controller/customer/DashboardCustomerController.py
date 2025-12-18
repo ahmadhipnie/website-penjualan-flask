@@ -376,3 +376,30 @@ def delete_alamat(alamat_id):
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
 
+@customer_bp.route('/pesanan/konfirmasi/<int:penjualan_id>', methods=['POST'])
+@customer_required
+def konfirmasi_terima(penjualan_id):
+    """Konfirmasi penerimaan barang oleh customer: ubah status 'sampai' -> 'selesai'"""
+    try:
+        db = get_db()
+        cursor = db.cursor()
+        # Pastikan pesanan ada dan milik user
+        cursor.execute("SELECT id, id_user, status FROM penjualans WHERE id = %s", (penjualan_id,))
+        p = cursor.fetchone()
+        if not p:
+            cursor.close()
+            return jsonify({'success': False, 'message': 'Pesanan tidak ditemukan'}), 404
+        if p['id_user'] != session['user_id']:
+            cursor.close()
+            return jsonify({'success': False, 'message': 'Unauthorized'}), 403
+        if p['status'] != 'sampai':
+            cursor.close()
+            return jsonify({'success': False, 'message': 'Pesanan tidak dalam status sampai'}), 400
+        # Update status
+        cursor.execute("UPDATE penjualans SET status = 'selesai', updated_at = NOW() WHERE id = %s", (penjualan_id,))
+        db.commit()
+        cursor.close()
+        return jsonify({'success': True, 'message': 'Konfirmasi berhasil. Pesanan selesai.'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
