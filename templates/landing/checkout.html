@@ -5,11 +5,13 @@
     <title>Checkout - EShopper</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
+
     <!-- Favicon -->
     <link
       href="{{ url_for('static', filename='assets_landing/img/favicon.ico') }}"
       rel="icon"
     />
+
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -18,11 +20,13 @@
       rel="stylesheet"
     />
 
+
     <!-- Font Awesome -->
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
       rel="stylesheet"
     />
+
 
     <!-- Libraries Stylesheet -->
     <link
@@ -30,18 +34,117 @@
       rel="stylesheet"
     />
 
+
     <!-- Customized Bootstrap Stylesheet -->
     <link
       href="{{ url_for('static', filename='assets_landing/css/style.css') }}"
       rel="stylesheet"
     />
 
+
     <!-- Midtrans Snap -->
     <script
       src="https://app.sandbox.midtrans.com/snap/snap.js"
       data-client-key="SB-Mid-client-mg6Aw-GWdQnnwbPp"
     ></script>
+
+    <!-- Custom Color Theme -->
+    <style>
+      /* Primary Color: #57726E */
+      .text-primary,
+      a.text-primary:hover,
+      a.text-primary:focus {
+        color: #57726E !important;
+      }
+
+      .btn-primary {
+        background-color: #57726E !important;
+        border-color: #57726E !important;
+      }
+
+      .btn-primary:hover,
+      .btn-primary:focus,
+      .btn-primary:active {
+        background-color: #465d5a !important;
+        border-color: #465d5a !important;
+      }
+
+      .btn-outline-primary {
+        color: #57726E !important;
+        border-color: #57726E !important;
+      }
+
+      .btn-outline-primary:hover,
+      .btn-outline-primary:focus {
+        background-color: #57726E !important;
+        border-color: #57726E !important;
+        color: white !important;
+      }
+
+      .bg-primary {
+        background-color: #57726E !important;
+      }
+
+      .border-primary {
+        border-color: #57726E !important;
+      }
+
+      /* Secondary Color: #E4ECEB */
+      .bg-secondary {
+        background-color: #E4ECEB !important;
+      }
+
+      .card-header.bg-secondary {
+        background-color: #E4ECEB !important;
+      }
+
+      .border-secondary {
+        border-color: #E4ECEB !important;
+      }
+
+      .text-secondary {
+        color: #E4ECEB !important;
+      }
+
+      /* Tertiary Color: #A2B1AE */
+      .bg-tertiary {
+        background-color: #A2B1AE !important;
+      }
+
+      .text-tertiary {
+        color: #A2B1AE !important;
+      }
+
+      /* Table header with primary color */
+      thead.bg-secondary {
+        background-color: #E4ECEB !important;
+      }
+
+      /* Back to top button */
+      .back-to-top {
+        background-color: #57726E !important;
+        border-color: #57726E !important;
+      }
+
+      .back-to-top:hover {
+        background-color: #465d5a !important;
+      }
+
+      /* Badge styling */
+      .badge {
+        background-color: #57726E !important;
+      }
+
+      .btn-payment {
+    color: #ffffff !important;        /* ganti dengan warna teks yang diinginkan */
+  }
+
+  .btn-payment i {
+    color: #ffffff !important;        /* biarkan ikon mengikuti warna teks */
+  }
+    </style>
   </head>
+
 
   <body>
     <!-- Topbar Start -->
@@ -78,13 +181,13 @@
       </div>
       <div class="row align-items-center py-3 px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-          <a href="{{ url_for('landing.index') }}" class="text-decoration-none">
-            <h1 class="m-0 display-5 font-weight-semi-bold">
-              <span class="text-primary font-weight-bold border px-3 mr-1"
-                >E</span
-              >Shopper
-            </h1>
-          </a>
+          <a href="" class="text-decoration-none">
+  <img src="{{ url_for('static', filename='image/logo.jpeg') }}" 
+       alt="E-Shopper Logo" 
+       height="70" 
+       width="70"
+       class="mb-4">
+</a>
         </div>
         <div class="col-lg-6 col-6 text-left">
           <!-- Search removed for cleaner look -->
@@ -96,6 +199,7 @@
             <i class="fas fa-shopping-cart text-primary"></i>
             <span class="badge" id="cart-badge">0</span>
           </a>
+
 
           <!-- Profile Dropdown -->
           <div class="btn-group">
@@ -142,6 +246,7 @@
     </div>
     <!-- Topbar End -->
 
+
     <!-- Navbar Start -->
     <div class="container-fluid">
       <div class="row border-top px-xl-5">
@@ -149,16 +254,7 @@
           <nav
             class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0"
           >
-            <a
-              href="{{ url_for('landing.index') }}"
-              class="text-decoration-none d-block d-lg-none"
-            >
-              <h1 class="m-0 display-5 font-weight-semi-bold">
-                <span class="text-primary font-weight-bold border px-3 mr-1"
-                  >E</span
-                >Shopper
-              </h1>
-            </a>
+            
             <button
               type="button"
               class="navbar-toggler"
@@ -181,6 +277,7 @@
     </div>
     <!-- Navbar End -->
 
+
     <!-- Page Header Start -->
     <div class="container-fluid bg-secondary mb-5">
       <div
@@ -198,6 +295,7 @@
       </div>
     </div>
     <!-- Page Header End -->
+
 
     <!-- Checkout Start -->
     <div class="container-fluid pt-5">
@@ -255,6 +353,7 @@
           </div>
         </div>
 
+
         <!-- Order Summary -->
         <div class="col-lg-8">
           <div class="card border-secondary mb-5">
@@ -307,6 +406,7 @@
                 </table>
               </div>
 
+
               <div class="border-bottom pb-3 mb-3">
                 <div class="d-flex justify-content-between">
                   <h6 class="font-weight-medium">Subtotal</h6>
@@ -320,6 +420,7 @@
                 </div>
               </div>
 
+
               <div class="d-flex justify-content-between mb-4">
                 <h5 class="font-weight-bold">Total Pembayaran</h5>
                 <h5 class="font-weight-bold">
@@ -327,8 +428,9 @@
                 </h5>
               </div>
 
+
               <button
-                class="btn btn-lg btn-block btn-primary font-weight-bold py-3"
+                class="btn btn-lg btn-block btn-primary font-weight-bold py-3 btn-payment"
                 id="btn-pay-now"
               >
                 <i class="fa fa-credit-card mr-2"></i>Bayar Sekarang
@@ -340,18 +442,18 @@
     </div>
     <!-- Checkout End -->
 
+
     <!-- Footer Start -->
     <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
       <div class="row px-xl-5 pt-5">
         <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
           <a href="" class="text-decoration-none">
-            <h1 class="mb-4 display-5 font-weight-semi-bold">
-              <span
-                class="text-primary font-weight-bold border border-white px-3 mr-1"
-                >E</span
-              >Shopper
-            </h1>
-          </a>
+  <img src="{{ url_for('static', filename='image/logo.jpeg') }}" 
+       alt="E-Shopper Logo" 
+       height="70" 
+       width="70"
+       class="mb-4">
+</a>
           <p>
             Toko online terpercaya dengan berbagai pilihan produk berkualitas
           </p>
@@ -360,10 +462,12 @@
     </div>
     <!-- Footer End -->
 
+
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary back-to-top"
       ><i class="fa fa-angle-double-up"></i
     ></a>
+
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -371,8 +475,10 @@
     <script src="{{ url_for('static', filename='assets_landing/lib/easing/easing.min.js') }}"></script>
     <script src="{{ url_for('static', filename='assets_landing/lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
+
     <!-- Template Javascript -->
     <script src="{{ url_for('static', filename='assets_landing/js/main.js') }}"></script>
+
 
     <!-- Checkout Script -->
     <script>
@@ -382,10 +488,12 @@
           $("#cart-badge").text(data.count);
         });
 
+
         // Handle payment button
         $("#btn-pay-now").on("click", function () {
           var alamatId = $("#alamat-select").val();
           var $btn = $(this);
+
 
           // Validasi
           if (!alamatId) {
@@ -393,13 +501,16 @@
             return;
           }
 
+
           // Get full alamat text
           var alamatText = $("#alamat-select option:selected").data("text");
+
 
           // Disable button
           $btn
             .prop("disabled", true)
             .html('<i class="fa fa-spinner fa-spin mr-2"></i>Processing...');
+
 
           // Process checkout
           $.ajax({
@@ -416,12 +527,14 @@
                 var orderId = response.order_id;
                 console.log("Checkout process success, order_id:", orderId);
 
+
                 // Function to finish payment
                 function finishPayment() {
                   console.log(
                     "Calling finish endpoint with order_id:",
                     orderId
                   );
+
 
                   $.ajax({
                     url: "/landing/checkout/finish",
@@ -440,6 +553,7 @@
                     },
                   });
                 }
+
 
                 // Open Midtrans payment
                 snap.pay(response.snap_token, {

@@ -70,10 +70,9 @@
 
         /* Background register image dengan overlay brand color */
         .bg-register-image {
-            background: linear-gradient(rgba(87, 114, 110, 0.7), rgba(87, 114, 110, 0.7)), 
-                        url("{{ url_for('static', filename='assets_sb_admin/img/undraw_profile.svg') }}");
-            background-position: center;
-            background-size: cover;
+            background: url("{{ url_for('static', filename='image/logo.jpeg') }}") no-repeat center;
+    background-position: center;
+    background-size: contain;
         }
 
         /* Card shadow dengan hint brand color */
